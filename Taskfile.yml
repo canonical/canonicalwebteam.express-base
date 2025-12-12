@@ -1,0 +1,116 @@
+# https://taskfile.dev
+
+version: '3'
+
+env:
+  NODE_VERSION: "22"
+
+# Available tasks:
+# - start (default)
+# - install
+# - shell
+# - clean
+# - test
+# - lint
+# - format
+# - build
+tasks:
+  default:
+    cmds:
+      - task: start
+
+  start:
+    desc: "Start the project"
+    deps:
+      - install
+    cmds:
+      - docker run ...
+
+  install:
+    desc: "Install Node.js binary and node modules"
+    deps:
+      - install-yarn
+    cmds:
+      - echo "Installation complete"
+
+  shell:
+    desc: "Open a shell to the container running the example"
+    deps:
+      - install
+    cmds:
+      - docker exec
+
+  clean:
+    cmds:
+      - rm -rf example/dist example/node_modules .task
+
+  test:
+    desc: "Run all project tests"
+    deps:
+      - install
+    cmds:
+      - yarn test --coverage
+
+  lint:
+    desc: "Run all project linting"
+    deps:
+      - install
+    cmds:
+      - yarn lint-ts
+      - yarn lint-js
+      - yarn lint-scss
+
+  format:
+    desc: "Run all project formatting"
+    deps:
+      - install
+    cmds:
+      - echo "TODO"
+
+  build:
+    desc: "Build the project static files"
+    deps:
+      - install
+    cmds:
+      - yarn build
+
+  # Versioning setup
+  setup-mise:
+    internal: true
+    desc: "Setup mise"
+    preconditions:
+      - which curl
+    status:
+      - ! which mise
+    cmds:
+      - curl https://mise.run | sh
+
+  setup-node:
+    deps:
+      - setup-mise
+    cmds:
+      - mise use node@{{ .NODE_VERSION }}
+
+  setup-yarn:
+    deps:
+      - setup-node
+    cmds:
+      - mise use npm:yarn
+
+
+  # Node.js package manager
+  install-yarn:
+    internal: true
+    desc: "Install yarn packages"
+    deps:
+      - setup-yarn
+    status:
+      - which yarn
+      - which node
+    sources:
+      - yarn.lock
+      - package.json
+    generates:
+      - "node_modules/**"
+    cmds:
+      - yarn install

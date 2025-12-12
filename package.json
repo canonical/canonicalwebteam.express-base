@@ -1,0 +1,35 @@
+{
+	"name": "express-base-packages",
+	"private": true,
+	"version": "0.0.1",
+	"description": "Canonical's Express base implementation and middlewares",
+	"author": {
+		"email": "webteam@canonical.com",
+		"name": "Canonical Webteam"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/canonical/canonicalwebteam.express-base"
+	},
+	"license": "LGPL-3.0",
+	"bugs": {
+		"url": "https://github.com/canonical/canonicalwebteam.express-base/issues"
+	},
+	"homepage": "https://github.com/canonical/canonicalwebteam.express-base#readme",
+	"workspaces": [
+		"example",
+		"packages/*"
+	],
+	"scripts": {
+		"build": "",
+		"check": "echo 'checked'",
+    "test": "echo 'tested'",
+    "postinstall": "husky",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
+	},
+	"devDependencies": {
+		"husky": "^9.1.7",
+		"pinst": "^3.0.0"
+	}
+}
