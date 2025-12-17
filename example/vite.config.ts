@@ -1,6 +1,6 @@
-import rsc from '@vitejs/plugin-rsc'
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import react from "@vitejs/plugin-react";
+import rsc from "@vitejs/plugin-rsc";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
@@ -24,7 +24,7 @@ export default defineConfig({
 
   // needed to be able to resolve the dependencies to 'packages/*'
   resolve: {
-    preserveSymlinks: true
+    preserveSymlinks: true,
   },
 
   // specify entry point for each environment.
@@ -38,7 +38,7 @@ export default defineConfig({
       build: {
         rollupOptions: {
           input: {
-            index: './src/framework/entry.rsc.tsx',
+            index: "./src/framework/entry.rsc.tsx",
           },
         },
       },
@@ -52,7 +52,7 @@ export default defineConfig({
       build: {
         rollupOptions: {
           input: {
-            index: './src/framework/entry.ssr.tsx',
+            index: "./src/framework/entry.ssr.tsx",
           },
         },
       },
@@ -68,10 +68,10 @@ export default defineConfig({
       build: {
         rollupOptions: {
           input: {
-            index: './src/framework/entry.browser.tsx',
+            index: "./src/framework/entry.browser.tsx",
           },
         },
       },
     },
   },
-})
+});

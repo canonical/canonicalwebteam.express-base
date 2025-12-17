@@ -21,7 +21,7 @@
 		"packages/*"
 	],
 	"scripts": {
-		"build": "",
+		"build": "echo 'built'",
 		"check": "echo 'checked'",
     "test": "echo 'tested'",
     "postinstall": "husky",
@@ -30,6 +30,7 @@
 	},
 	"devDependencies": {
 		"husky": "^9.1.7",
-		"pinst": "^3.0.0"
+		"pinst": "^3.0.0",
+    "@types/node": "^25.0.2"
 	}
 }

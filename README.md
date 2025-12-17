@@ -3,7 +3,14 @@
 Express base application used to create Canonical's websites.
 It fulfils the same role as [flask-base]() for websites based on Expressjs framework.
 
+## Husky
 
+There is a 'pre-commit' hook that is run before every commit to make sure that the project guidelines are
+fulfilled. This hook runs the script for formatting, linting and testing the project.
+
+The script is found in `.husky/pre-commit`.
+
+## 
 
 # Vite + RSC
 
