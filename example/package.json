@@ -4,14 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build"
   },
   "dependencies": {
+    "@canonical/express-base": "0.0.0",
+    "@canonical/express-middlewares": "0.0.0",
+    "@canonical/yaml-responses": "0.0.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "@canonical/biome-config": "^0.10.0-experimental.4",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "latest",

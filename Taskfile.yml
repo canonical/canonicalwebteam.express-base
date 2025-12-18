@@ -96,7 +96,8 @@ tasks:
       - setup-node
     cmds:
       - mise use npm:yarn
-
+      - mise use npm:lerna
+      - mise use npm:nx
 
   # Node.js package manager
   install-yarn:

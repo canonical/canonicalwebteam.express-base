@@ -21,16 +21,22 @@
 		"packages/*"
 	],
 	"scripts": {
-		"build": "echo 'built'",
-		"check": "echo 'checked'",
-    "test": "echo 'tested'",
-    "postinstall": "husky",
+		"dev": "echo todo",
+		"build": "lerna run build",
+    "format": "lerna run format",
+    "format:fix": "lerna run format:fix",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
+    "check": "lerna run check",
+    "check:fix": "lerna run check:fix",
+		"test": "lerna run test",
+		"publish": "lerna run build && lerna publish --no-private",
+		"postinstall": "husky",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
 	},
 	"devDependencies": {
 		"husky": "^9.1.7",
-		"pinst": "^3.0.0",
-    "@types/node": "^25.0.2"
+		"pinst": "^3.0.0"
 	}
 }
