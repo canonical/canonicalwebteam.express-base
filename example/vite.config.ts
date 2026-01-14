@@ -9,19 +9,6 @@ export default defineConfig({
   },
   plugins: [react()],
   build: {
-    outDir: "dist/client"
+    outDir: "dist/client",
   },
-  environments: {
-    ssr: {
-      build: {
-        ssr: true,
-        outDir: "dist/server",
-        rollupOptions: {
-          input: {
-            server: "src/server/server.ts"
-          }
-        }
-      }
-    }
-  }
 });

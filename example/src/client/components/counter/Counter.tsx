@@ -5,7 +5,7 @@ function Counter() {
 
   return (
     <div className="card">
-      <button onClick={() => setCount((count) => count + 1)}>
+      <button type="button" onClick={() => setCount((count) => count + 1)}>
         Count is {count}
       </button>
     </div>

@@ -1,7 +1,5 @@
 function Head() {
-  return (
-    <title>Demo</title>
-  )
+  return <title>Demo</title>;
 }
 
 export default Head;

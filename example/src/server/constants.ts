@@ -7,5 +7,5 @@ export const BASE = process.env.BASE || "/";
 
 export const TEMPLATE_HTML = await fs.readFile(
   path.join(process.cwd(), "dist", "client", "index.html"),
-  "utf-8"
+  "utf-8",
 );

@@ -10,7 +10,7 @@ const router = Router();
 router.get("test", (_, res) => {
   const result = add(sub(mul(25, 2), 10), 2);
   // example response from an API
-  const data: ApiTestResponse = { message: `The API returned ${result}`}
+  const data: ApiTestResponse = { message: `The API returned ${result}` };
   res.json(data);
 });
 

@@ -3,10 +3,10 @@ import type {
   RendererServerEntrypointProps,
 } from "@canonical/react-ssr/renderer";
 import { JSXRenderer } from "@canonical/react-ssr/renderer";
-import App from "client/components/app/App";
-import { TEMPLATE_HTML } from "./constants";
-import Head from "client/components/head/Head";
 import type { WindowInitialData } from "shared/types/windowData";
+import App from "../client/components/app/App";
+import Head from "../client/components/head/Head";
+import { TEMPLATE_HTML } from "./constants";
 
 export default function getRenderer(initialData: WindowInitialData) {
   const EntryServer: ReactServerEntrypointComponent<
@@ -24,9 +24,7 @@ export default function getRenderer(initialData: WindowInitialData) {
           {linkTags}
         </head>
         <body>
-          <div id="root">
-            <App data={initialData} />
-          </div>
+          <App data={initialData} />
         </body>
       </html>
     );

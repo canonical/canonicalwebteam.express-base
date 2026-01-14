@@ -7,9 +7,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
-      name: 'express-base',
-      formats: ['es'],
-      fileName: 'main'
+      name: "express-base",
+      formats: ["es"],
+      fileName: "main",
     },
     sourcemap: true,
   },

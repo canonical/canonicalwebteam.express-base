@@ -1,9 +1,9 @@
 import path from "node:path";
 import type { Application, NextFunction, Request, Response } from "express";
 import { BASE } from "./constants";
-import apiRoute from "./routes/api";
-import fetchInitialData from "./initialData";
+import fetchInitialData from "./data/initialData";
 import getRenderer from "./renderer";
+import apiRoute from "./routes/api";
 
 export async function setupProd(app: Application) {
   const compression = (await import("compression")).default;
@@ -11,7 +11,7 @@ export async function setupProd(app: Application) {
   app.use(compression());
   app.use(
     BASE,
-    sirv(path.join(process.cwd(), "dist", "client"), { extensions: [] })
+    sirv(path.join(process.cwd(), "dist", "client"), { extensions: [] }),
   );
 
   app.use("/api", apiRoute);

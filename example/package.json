@@ -5,10 +5,17 @@
   "scripts": {
     "dev": "tsx src/server/server.ts",
     "dev:debug": "tsx --inspect-brk=0.0.0.0:9229 src/server/server.ts",
-    "build": "rm -rf dist/ && npm run build:client && npm run build:server",
+    "build": "rm -rf dist/ && yarn run build:client && yarn run build:server",
     "build:client": "vite build",
-    "build:server": "vite build --environment ssr",
-    "start": "node dist/server/server.js"
+    "build:server": "vite build --ssr src/server/entry-server.ts --outDir dist/server",
+    "start": "NODE_ENV=production node dist/server/entry-server.mjs",
+    "biome:format": "yarn exec -- biome format",
+    "biome:format:fix": "yarn exec -- biome format --write src/client/components/app/App.css",
+    "biome:lint": "yarn exec -- biome lint",
+    "biome:lint:fix": "yarn exec -- biome lint --write",
+    "biome:check": "yarn exec -- biome check",
+    "biome:check:fix": "yarn exec -- biome check --write",
+    "test": "echo 'The example website has no tests'"
   },
   "dependencies": {
     "@canonical/express-base": "0.0.0",

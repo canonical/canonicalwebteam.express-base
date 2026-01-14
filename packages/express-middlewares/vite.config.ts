@@ -7,9 +7,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
-      name: 'express-middlewares',
-      formats: ['es'],
-      fileName: 'main'
+      name: "express-middlewares",
+      formats: ["es"],
+      fileName: "main",
     },
   },
   plugins: [dts()],

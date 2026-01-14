@@ -7,9 +7,9 @@ import { setupProd } from "./prod-server";
 const app = express();
 
 if (IS_PRODUCTION) {
-  await setupProd(app)
+  await setupProd(app);
 } else {
-  await setupDev(app)
+  await setupDev(app);
 }
 
 // Start http server

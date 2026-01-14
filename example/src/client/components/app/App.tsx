@@ -2,9 +2,12 @@ import type { WindowInitialData } from "shared/types/windowData";
 import Counter from "../counter/Counter";
 import ServerMessage from "../serverMessage/ServerMessage";
 
-import "./Body.css";
+import "./App.css";
+import { useId } from "react";
 
-function Body({ data }: { data: WindowInitialData }) {
+function App({ data }: { data: WindowInitialData | undefined }) {
+  const ssrRenderedId = useId();
+  const flaskOutputId = useId();
   return (
     <>
       <div>
@@ -20,13 +23,13 @@ function Body({ data }: { data: WindowInitialData }) {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <div id="ssr-rendered">
+      <div id={ssrRenderedId}>
         <h3>SSR rendered message</h3>
-        <p id="flask-output">{data.apiSSRResponse.message}</p>
+        <p id={flaskOutputId}>{data?.apiSSRResponse.message}</p>
       </div>
       <ServerMessage />
     </>
   );
 }
 
-export default Body;
+export default App;

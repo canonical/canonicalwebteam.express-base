@@ -21,14 +21,15 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "echo todo",
+    "dev": "lerna run dev --scope=example",
     "build": "lerna run build",
-    "format": "lerna run format",
-    "format:fix": "lerna run format:fix",
-    "lint": "lerna run lint",
-    "lint:fix": "lerna run lint:fix",
-    "check": "lerna run check",
-    "check:fix": "lerna run check:fix",
+    "start": "lerna run start --scope=example",
+    "biome:format": "lerna run format",
+    "biome:format:fix": "lerna run format:fix",
+    "biome:lint": "lerna run lint",
+    "biome:lint:fix": "lerna run lint:fix",
+    "biome:check": "lerna run check",
+    "biome:check:fix": "lerna run check:fix",
     "test": "lerna run test",
     "publish": "lerna run build && lerna publish --no-private",
     "postinstall": "husky",
@@ -37,6 +38,9 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
+    "lerna": "^9.0.3",
+    "nx": "22.3.3",
     "pinst": "^3.0.0"
-  }
+  },
+  "dependencies": {}
 }

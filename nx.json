@@ -1,0 +1,69 @@
+{
+  "targetDefaults": {
+    "dev": {
+      "dependsOn": []
+    },
+    "dev:debug": {
+      "dependsOn": []
+    },
+    "build": {
+      "cache": true,
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "build:client": {
+      "cache": true,
+      "dependsOn": [
+        "^build:client"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/client"
+      ]
+    },
+    "build:server": {
+      "cache": true,
+      "dependsOn": [
+        "^build:server"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/server"
+      ]
+    },
+    "start": {
+      "dependsOn": []
+    },
+    "format": {
+      "cache": true,
+      "dependsOn": []
+    },
+    "format:fix": {
+      "dependsOn": []
+    },
+    "lint": {
+      "cache": true,
+      "dependsOn": []
+    },
+    "lint:fix": {
+      "dependsOn": []
+    },
+    "check": {
+      "cache": true,
+      "dependsOn": []
+    },
+    "check:fix": {
+      "dependsOn": []
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": [],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ]
+    }
+  },
+  "nxCloudId": "69667fede1cf94590d58e778"
+}

@@ -7,9 +7,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
-      name: 'yaml-responses',
-      formats: ['es'],
-      fileName: 'main'
+      name: "yaml-responses",
+      formats: ["es"],
+      fileName: "main",
     },
   },
   plugins: [dts()],

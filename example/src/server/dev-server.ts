@@ -1,9 +1,11 @@
-import path from "node:path";
 import fs from "node:fs/promises";
+import path from "node:path";
+import type { RenderHandler } from "@canonical/react-ssr/renderer";
 
 import type { Application } from "express";
-import { type ViteDevServer, createServer } from "vite";
-
+import type { WindowInitialData } from "shared/types/windowData";
+import { createServer, type ViteDevServer } from "vite";
+import fetchInitialData from "./data/initialData";
 
 async function setUpDevServer(app: Application): Promise<ViteDevServer> {
   const vite = await createServer({
@@ -28,18 +30,16 @@ export async function setupDev(app: Application) {
       const url = req.originalUrl;
       let template = await fs.readFile(
         path.join(process.cwd(), "index.html"),
-        "utf-8"
+        "utf-8",
       );
 
       template = await vite.transformIndexHtml(url, template);
-      const render: (url: string) => RenderOutput = (
-        await vite.ssrLoadModule("src/client/entry-server.tsx")
-      ).render;
+      const render: (windowData: WindowInitialData) => RenderHandler = (
+        await vite.ssrLoadModule("src/server/renderer.tsx")
+      ).getRenderer;
 
-      const rendered = await render(url);
-      const html = template
-        .replace(`<!--app-head-->`, rendered.head ?? "")
-        .replace(`<!--app-html-->`, rendered.body ?? "");
+      const initialData = await fetchInitialData();
+      const html = await render(initialData);
 
       res.status(200).set({ "Content-Type": "text/html" }).send(html);
     } catch (e) {
