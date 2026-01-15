@@ -3,8 +3,8 @@
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2022"],
-    "types": ["vite/client"],
+    "lib": ["ES2022", "DOM"],
+    "types": ["node", "react"],
     "skipLibCheck": true,
     "baseUrl": "src",
 

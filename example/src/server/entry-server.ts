@@ -1,14 +1,14 @@
 import express from "express";
 import { IS_PRODUCTION, PORT } from "./constants";
-import { setupDev } from "./dev-server";
-import { setupProd } from "./prod-server";
 
 // Create http server
 const app = express();
 
 if (IS_PRODUCTION) {
-  await setupProd(app);
+  const setupProd = (await import("./prod-server")).setupProd;
+  setupProd(app);
 } else {
+  const setupDev = (await import("./dev-server")).setupDev;
   await setupDev(app);
 }
 

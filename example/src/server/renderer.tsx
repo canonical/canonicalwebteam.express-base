@@ -6,9 +6,11 @@ import { JSXRenderer } from "@canonical/react-ssr/renderer";
 import type { WindowInitialData } from "shared/types/windowData";
 import App from "../client/components/app/App";
 import Head from "../client/components/head/Head";
-import { TEMPLATE_HTML } from "./constants";
 
-export default function getRenderer(initialData: WindowInitialData) {
+export default function getRenderer(
+  initialData: WindowInitialData,
+  htmlTemplate: string,
+) {
   const EntryServer: ReactServerEntrypointComponent<
     RendererServerEntrypointProps
   > = ({
@@ -29,5 +31,5 @@ export default function getRenderer(initialData: WindowInitialData) {
       </html>
     );
   };
-  return new JSXRenderer(EntryServer, { htmlString: TEMPLATE_HTML }).render;
+  return new JSXRenderer(EntryServer, { htmlString: htmlTemplate }).render;
 }

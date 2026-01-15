@@ -7,6 +7,8 @@ import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
 
+//import { ViteHTMLExtractor } from "@canonical/express-base";
+
 async function setUpDevServer(app: Application): Promise<ViteDevServer> {
   const vite = await createServer({
     publicDir: "public",
@@ -34,14 +36,20 @@ export async function setupDev(app: Application) {
       );
 
       template = await vite.transformIndexHtml(url, template);
-      const render: (windowData: WindowInitialData) => RenderHandler = (
-        await vite.ssrLoadModule("src/server/renderer.tsx")
-      ).getRenderer;
-
+      console.log(template);
+      const getRenderer: (
+        windowData: WindowInitialData,
+        htmlTemplate: string,
+      ) => RenderHandler = (await vite.ssrLoadModule("src/server/renderer.tsx"))
+        .default;
       const initialData = await fetchInitialData();
-      const html = await render(initialData);
 
-      res.status(200).set({ "Content-Type": "text/html" }).send(html);
+      //const extractor = new ViteHTMLExtractor(template);
+
+      const render = getRenderer(initialData, template);
+
+      res.status(200).set({ "Content-Type": "text/html" });
+      return render(req, res);
     } catch (e) {
       if (e instanceof Error) {
         vite?.ssrFixStacktrace(e);

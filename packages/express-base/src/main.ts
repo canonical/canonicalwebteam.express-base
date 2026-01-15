@@ -9,3 +9,9 @@ export const add = (a: number | MyNumber, b: number | MyNumber): number => {
   }
   return a + b;
 };
+
+export {
+  type HTMLTemplateHeadProps,
+  ViteHTMLExtractor,
+  ViteRenderer,
+} from "./renderer";

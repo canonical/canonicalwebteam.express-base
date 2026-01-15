@@ -29,7 +29,9 @@ task dev
 ```
 
 The dependencies will be installed automatically and a Node server will be started at port 3010 with the example
-website. The running server has HMR enabled to ease working with the project and testing new changes.
+website. The running server has HMR enabled to ease working with the FE of the example website.
+If you modify the server code of the example website you'll need to restart the server manually.
+If you modify any of the *packages/* you'll have to re-build the project (`task build`) and restart the server.
 
 If you want to run the same version that will be run in [Demos](https://demos.haus/) environment:
 
@@ -47,8 +49,8 @@ Clone the project and then in the root folder you can run:
 task dev
 ```
 
-To start the development server and start working. The server has HMR, so you can modify files, save the changes and
-see them live in a few seconds. There is an "example" website in which the features of the library can be tested.
+To start the development server and start working. The client code of the example website has HMR, so you can modify files,
+save the changes and see them live in a few seconds. The "example" website is for testing the features of the libraries.
 It is deployed at *http://localhost:3010*.
 
 Once you are happy with your changes you can run:

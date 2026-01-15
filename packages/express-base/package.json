@@ -38,7 +38,9 @@
     "test": "echo 'test'"
   },
   "dependencies": {
-    "@canonical/express-middlewares": "0.0.0"
+    "@canonical/express-middlewares": "0.0.0",
+    "domhandler": "^5.0.3",
+    "react": "^19.2.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
