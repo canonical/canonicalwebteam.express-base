@@ -1,13 +1,11 @@
 import fs from "node:fs/promises";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
-import type { RenderHandler } from "@canonical/react-ssr/renderer";
-
+import type { RenderResult } from "@canonical/react-ssr/renderer";
 import type { Application } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
-
-//import { ViteHTMLExtractor } from "@canonical/express-base";
 
 async function setUpDevServer(app: Application): Promise<ViteDevServer> {
   const vite = await createServer({
@@ -37,19 +35,17 @@ export async function setupDev(app: Application) {
 
       template = await vite.transformIndexHtml(url, template);
       console.log(template);
-      const getRenderer: (
+      const render: (
         windowData: WindowInitialData,
         htmlTemplate: string,
-      ) => RenderHandler = (await vite.ssrLoadModule("src/server/renderer.tsx"))
+        req: IncomingMessage,
+        res: ServerResponse,
+      ) => RenderResult = (await vite.ssrLoadModule("src/server/renderer.tsx"))
         .default;
       const initialData = await fetchInitialData();
 
-      //const extractor = new ViteHTMLExtractor(template);
-
-      const render = getRenderer(initialData, template);
-
       res.status(200).set({ "Content-Type": "text/html" });
-      return render(req, res);
+      return render(initialData, template, req, res);
     } catch (e) {
       if (e instanceof Error) {
         vite?.ssrFixStacktrace(e);

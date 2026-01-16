@@ -7,7 +7,6 @@
     "types": ["vite/client", "node", "react", "react-dom"],
     "skipLibCheck": true,
     "baseUrl": "src",
-    "composite": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

@@ -1,35 +1,43 @@
-import type {
-  ReactServerEntrypointComponent,
-  RendererServerEntrypointProps,
-} from "@canonical/react-ssr/renderer";
-import { JSXRenderer } from "@canonical/react-ssr/renderer";
+// biome-ignore-all lint/correctness/useUniqueElementIds: root hydration outlet
+
+import type { IncomingMessage, ServerResponse } from "node:http";
+import {
+  type HTMLTemplateHeadProps,
+  type SSRComponent,
+  ViteRenderer,
+} from "@canonical/express-base";
 import type { WindowInitialData } from "shared/types/windowData";
 import App from "../client/components/app/App";
 import Head from "../client/components/head/Head";
 
-export default function getRenderer(
-  initialData: WindowInitialData,
-  htmlTemplate: string,
-) {
-  const EntryServer: ReactServerEntrypointComponent<
-    RendererServerEntrypointProps
-  > = ({
-    lang = "en",
-    scriptTags,
-    linkTags,
-  }: RendererServerEntrypointProps) => {
+function getRenderer(initialData: WindowInitialData, htmlTemplate: string) {
+  const EntryServer: SSRComponent = ({
+    lang,
+    allHeadElements,
+  }: HTMLTemplateHeadProps) => {
     return (
       <html lang={lang}>
         <head>
           <Head />
-          {scriptTags}
-          {linkTags}
+          {allHeadElements}
         </head>
         <body>
-          <App data={initialData} />
+          <div id="root">
+            <App data={initialData} />
+          </div>
         </body>
       </html>
     );
   };
-  return new JSXRenderer(EntryServer, { htmlString: htmlTemplate }).render;
+  return new ViteRenderer(EntryServer, { htmlString: htmlTemplate }).render;
+}
+
+export default function render(
+  initialData: WindowInitialData,
+  htmlTemplate: string,
+  req: IncomingMessage,
+  res: ServerResponse,
+) {
+  const renderer = getRenderer(initialData, htmlTemplate);
+  return renderer(req, res);
 }

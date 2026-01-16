@@ -40,13 +40,17 @@ export class ViteHTMLExtractor extends Extractor {
     return React.createElement(element.name, props, elementChildren);
   }
 
+  public getLinkElements(): React.ReactElement[] {
+    return this.getLinkTags();
+  }
+
   // Overwritten to include script content
-  public getScriptTags(): React.ReactElement[] {
+  public getScriptElements(): React.ReactElement[] {
     const scriptElements = this.getElements("script");
     return scriptElements.map(this.convertToReact, this);
   }
 
-  public getOtherHeadTags(): React.ReactElement[] {
+  public getOtherHeadElements(): React.ReactElement[] {
     const otherElements = ["title", "style", "meta", "base"].flatMap(
       (elementName: string) => this.getElements(elementName),
     );

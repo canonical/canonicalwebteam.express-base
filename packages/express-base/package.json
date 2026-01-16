@@ -16,38 +16,37 @@
   },
   "license": "LGPL-3.0-or-later",
   "type": "module",
-  "module": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "module": "dist/esm/main.js",
+  "types": "dist/types/main.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/main.js",
-      "types": "./dist/main.d.ts"
+      "import": "./dist/esm/main.js",
+      "types": "./dist/types/main.d.ts"
     }
   },
   "scripts": {
-    "build": "vite build",
+    "build": "tsc",
     "biome:format": "yarn exec -- biome format",
     "biome:format:fix": "yarn exec -- biome format --write",
     "biome:lint": "yarn exec -- biome lint",
     "biome:lint:fix": "yarn exec -- biome lint --write",
-    "biome:check": "yarn exec -- biome check",
-    "biome:check:fix": "yarn exec -- biome check --write",
+    "biome:check": "tsc --noEmit && yarn exec -- biome check",
+    "biome:check:fix": "tsc --noEmit && yarn exec -- biome check --write",
     "test": "echo 'test'"
   },
   "dependencies": {
     "@canonical/express-middlewares": "0.0.0",
     "domhandler": "^5.0.3",
-    "react": "^19.2.3"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@canonical/biome-config": "^0.10.0-experimental.4",
     "@types/node": "^25.0.3",
-    "typescript": "5.9.3",
-    "vite": "7.2.4",
-    "vite-plugin-dts": "^4.5.4"
+    "typescript": "5.9.3"
   }
 }
