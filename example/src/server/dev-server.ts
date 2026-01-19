@@ -6,6 +6,7 @@ import type { Application } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
+import apiRoute from "./routes/api";
 
 async function setUpDevServer(app: Application): Promise<ViteDevServer> {
   const vite = await createServer({
@@ -25,6 +26,7 @@ async function setUpDevServer(app: Application): Promise<ViteDevServer> {
 export async function setupDev(app: Application) {
   const vite = await setUpDevServer(app);
 
+  app.use("/api", apiRoute);
   app.use("*all", async (req, res) => {
     try {
       const url = req.originalUrl;
