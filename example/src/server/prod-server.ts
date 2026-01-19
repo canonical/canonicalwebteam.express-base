@@ -4,7 +4,7 @@ import type { Application, NextFunction, Request, Response } from "express";
 import sirv from "sirv";
 import { BASE, TEMPLATE_HTML } from "./constants";
 import fetchInitialData from "./data/initialData";
-import getRenderer from "./renderer";
+import render from "./renderer";
 import apiRoute from "./routes/api";
 
 export function setupProd(app: Application) {
@@ -17,7 +17,7 @@ export function setupProd(app: Application) {
   app.use("/api", apiRoute);
   app.use("*all", [serveStream], async (req: Request, res: Response) => {
     const initialData = await fetchInitialData();
-    getRenderer(initialData, TEMPLATE_HTML)(req, res);
+    render(initialData, TEMPLATE_HTML, req, res);
   });
 }
 

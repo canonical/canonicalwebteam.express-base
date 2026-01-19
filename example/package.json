@@ -9,7 +9,7 @@
     "build": "rm -rf dist/ && yarn run build:client && yarn run build:server",
     "build:client": "vite build",
     "build:server": "vite build --ssr src/server/entry-server.ts --outDir dist/server",
-    "start": "NODE_ENV=production node dist/server/entry-server.mjs",
+    "start": "NODE_ENV=production node dist/server/entry-server.js",
     "biome:format": "yarn exec -- biome format",
     "biome:format:fix": "yarn exec -- biome format --write src/client/components/app/App.css",
     "biome:lint": "yarn exec -- biome lint",

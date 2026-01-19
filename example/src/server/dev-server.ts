@@ -34,7 +34,6 @@ export async function setupDev(app: Application) {
       );
 
       template = await vite.transformIndexHtml(url, template);
-      console.log(template);
       const render: (
         windowData: WindowInitialData,
         htmlTemplate: string,

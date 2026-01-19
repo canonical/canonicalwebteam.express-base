@@ -1,35 +1,12 @@
-// biome-ignore-all lint/correctness/useUniqueElementIds: root hydration outlet
-
 import type { IncomingMessage, ServerResponse } from "node:http";
-import {
-  type HTMLTemplateHeadProps,
-  type SSRComponent,
-  ViteRenderer,
-} from "@canonical/express-base";
+import { ViteRenderer } from "@canonical/express-base";
 import type { WindowInitialData } from "shared/types/windowData";
-import App from "../client/components/app/App";
-import Head from "../client/components/head/Head";
+import PageSkeleton from "../shared/PageSkeleton";
 
 function getRenderer(initialData: WindowInitialData, htmlTemplate: string) {
-  const EntryServer: SSRComponent = ({
-    lang,
-    allHeadElements,
-  }: HTMLTemplateHeadProps) => {
-    return (
-      <html lang={lang}>
-        <head>
-          <Head />
-          {allHeadElements}
-        </head>
-        <body>
-          <div id="root">
-            <App data={initialData} />
-          </div>
-        </body>
-      </html>
-    );
-  };
-  return new ViteRenderer(EntryServer, { htmlString: htmlTemplate }).render;
+  return new ViteRenderer<WindowInitialData>(PageSkeleton, initialData, {
+    htmlString: htmlTemplate,
+  }).render;
 }
 
 export default function render(

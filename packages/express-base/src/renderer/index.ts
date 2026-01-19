@@ -1,6 +1,6 @@
 export { ViteHTMLExtractor } from "./vite-extractor.js";
 export {
-  type HTMLTemplateHeadProps,
+  type HTMLTemplateProps,
   type SSRComponent,
   ViteRenderer,
 } from "./vite-renderer.js";

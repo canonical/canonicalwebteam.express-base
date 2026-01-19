@@ -11,7 +11,7 @@ export const add = (a: number | MyNumber, b: number | MyNumber): number => {
 };
 
 export {
-  type HTMLTemplateHeadProps,
+  type HTMLTemplateProps,
   type SSRComponent,
   ViteHTMLExtractor,
   ViteRenderer,

@@ -1,12 +1,9 @@
-import { StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import App from "./components/app/App";
 import "./index.css";
 import { INITIAL_DATA_KEY } from "../shared";
+import PageSkeleton from "../shared/PageSkeleton";
 
 hydrateRoot(
-  document.getElementById("root") as HTMLElement,
-  <StrictMode>
-    <App data={window[INITIAL_DATA_KEY]} />
-  </StrictMode>,
+  document,
+  <PageSkeleton initialData={window[INITIAL_DATA_KEY]} lang="en" />,
 );
