@@ -1,24 +1,14 @@
-import type { ApiSSRResponse } from "shared";
-import type { WindowInitialData } from "shared/types/windowData";
+import { DELAY_SSR_MESSAGE, delay } from "../../shared";
+import type { WindowInitialData } from "../../shared/types/windowData";
 
 export default async function fetchInitialData() {
   // here we can perform some fetch operations in the server
-  const sampleSSRfetchResponse = await delay(500, {
+  const sampleSSRfetchResponse = await delay(DELAY_SSR_MESSAGE, {
     message: "SSR Response rendered in the server",
   });
   const initialData: WindowInitialData = {
-    apiSSRResponse: sampleSSRfetchResponse,
+    apiResponse: sampleSSRfetchResponse,
+    hasSuspense: false,
   };
   return initialData;
-}
-
-async function delay(
-  milliseconds: number,
-  returnValue: ApiSSRResponse,
-): Promise<ApiSSRResponse> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(returnValue);
-    }, milliseconds);
-  });
 }

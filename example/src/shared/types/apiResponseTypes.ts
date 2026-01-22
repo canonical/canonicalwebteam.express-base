@@ -1,7 +1,3 @@
-export type ApiTestResponse = {
-  message: string;
-};
-
-export type ApiSSRResponse = {
+export type ApiResponse = {
   message: string;
 };

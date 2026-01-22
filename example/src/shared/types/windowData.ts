@@ -1,5 +1,6 @@
-import type { ApiSSRResponse } from "./apiResponseTypes";
+import type { ApiResponse } from "./apiResponseTypes";
 
 export type WindowInitialData = {
-  apiSSRResponse: ApiSSRResponse;
+  apiResponse?: ApiResponse;
+  hasSuspense: boolean;
 };

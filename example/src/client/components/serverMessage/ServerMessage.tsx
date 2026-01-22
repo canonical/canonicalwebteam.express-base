@@ -1,14 +1,15 @@
 import { useEffect, useId, useState } from "react";
-import type { ApiTestResponse } from "../../../shared/types/apiResponseTypes";
+import type { ApiResponse } from "../../../shared/types/apiResponseTypes";
 
 function ServerMessage() {
   const dynMessageId = useId();
   const [message, setMessage] = useState("Server message");
 
   useEffect(() => {
+    console.log("fetch from the client");
     fetch("/api/test")
       .then((response) => response.json())
-      .then((data) => setMessage((data as ApiTestResponse).message));
+      .then((data) => setMessage((data as ApiResponse).message));
   }, []);
 
   return (

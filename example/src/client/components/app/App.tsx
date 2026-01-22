@@ -1,13 +1,19 @@
 import type { WindowInitialData } from "shared/types/windowData";
 import Counter from "../counter/Counter";
 import ServerMessage from "../serverMessage/ServerMessage";
+import ServerSSRMessage from "../serverMessage/ServerSSRMessage";
+import createServerSuspendedMessage from "../serverMessage/ServerSuspendedMessage";
 
 import "./App.css";
-import { useId } from "react";
+import { Suspense, useState } from "react";
+import Spinner from "../spinner/Spinner";
 
 function App({ data }: { data: WindowInitialData | undefined }) {
-  const ssrRenderedId = useId();
-  const flaskOutputId = useId();
+  const [hasSuspense] = useState(data?.hasSuspense || false);
+
+  // Create a fresh lazy component on each render to ensure Suspense re-evaluates
+  const ServerSuspendedMessage = createServerSuspendedMessage();
+
   return (
     <>
       <div>
@@ -23,10 +29,15 @@ function App({ data }: { data: WindowInitialData | undefined }) {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <div id={ssrRenderedId}>
-        <h3>SSR rendered message</h3>
-        <p id={flaskOutputId}>{data?.apiSSRResponse.message}</p>
-      </div>
+      {hasSuspense ? (
+        <Suspense fallback={<Spinner />}>
+          <ServerSuspendedMessage />
+        </Suspense>
+      ) : (
+        <ServerSSRMessage
+          message={data?.apiResponse?.message || "Placeholder"}
+        />
+      )}
       <ServerMessage />
     </>
   );

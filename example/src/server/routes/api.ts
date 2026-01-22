@@ -3,14 +3,15 @@ import { sub } from "@canonical/express-middlewares";
 import { mul } from "@canonical/yaml-responses";
 import { Router } from "express";
 
-import type { ApiTestResponse } from "shared";
+import { type ApiResponse, DELAY_API_CALL, delay } from "../../shared";
 
 const router = Router();
 
-router.get("/test", (_, res) => {
+router.get("/test", async (_, res) => {
   const result = add(sub(mul(25, 2), 10), 2);
   // example response from an API
-  const data: ApiTestResponse = { message: `The API returned ${result}` };
+  const data: ApiResponse = { message: `The API returned ${result}` };
+  await delay(DELAY_API_CALL, data);
   res.json(data);
 });
 

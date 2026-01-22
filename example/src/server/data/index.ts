@@ -12,3 +12,4 @@
  */
 
 export * from "./initialData";
+export * from "./WindowInitDataInjector";
