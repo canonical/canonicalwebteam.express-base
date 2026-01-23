@@ -58,6 +58,7 @@ tasks:
   clean:
     desc: "Clean node modules and builds"
     cmds:
+      - rm -rf coverage/ .nx/
       - rm -rf example/dist example/node_modules .task
       - rm -rf packages/express-base/dist packages/express-base/node_modules
       - rm -rf packages/express-middlewares/dist packages/express-middlewares/node_modules
@@ -68,7 +69,14 @@ tasks:
     deps:
       - install
     cmds:
-      - yarn test # --coverage
+      - yarn test
+
+  coverage:
+    desc: "Run the coverage for all the projects"
+    deps:
+      - install
+    cmds:
+      - yarn coverage
 
   lint:
     desc: "Run all project linting"

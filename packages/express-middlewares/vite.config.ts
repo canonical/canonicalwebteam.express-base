@@ -22,5 +22,11 @@ export default defineConfig({
       },
     },
   },
-  test: {},
+  test: {
+    coverage: {
+      enabled: true,
+      provider: "istanbul",
+      reporter: ["html"],
+    },
+  },
 });

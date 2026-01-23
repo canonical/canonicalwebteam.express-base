@@ -31,17 +31,21 @@
     "biome:lint:fix": "lerna run biome:lint:fix",
     "biome:check": "lerna run biome:check",
     "biome:check:fix": "lerna run biome:check:fix",
-    "test": "lerna run test --stream --concurrency 1",
+    "test": "vitest run",
+    "coverage": "vitest --ui --coverage",
     "publish": "lerna run build && lerna publish --no-private",
     "postinstall": "husky",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
   },
   "devDependencies": {
+    "@vitest/coverage-istanbul": "^4.0.18",
+    "@vitest/ui": "^4.0.18",
     "husky": "^9.1.7",
     "lerna": "^9.0.3",
     "nx": "22.3.3",
-    "pinst": "^3.0.0"
+    "pinst": "^3.0.0",
+    "vitest": "^4.0.18"
   },
   "dependencies": {}
 }

@@ -16,7 +16,8 @@
     "biome:lint:fix": "yarn exec -- biome lint --write",
     "biome:check": "yarn exec -- biome check",
     "biome:check:fix": "yarn exec -- biome check --write",
-    "test": "echo 'The example website has no tests'"
+    "test": "echo 'The example website has no tests'",
+    "coverage": "yarn test"
   },
   "dependencies": {
     "@canonical/express-base": "0.0.0",
