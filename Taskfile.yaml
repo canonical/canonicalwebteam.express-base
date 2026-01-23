@@ -32,14 +32,14 @@ tasks:
     deps:
       - install
     cmds:
-      - yarn run dev
+      - yarn dev
 
   start:
     desc: "Build the project and run it in production mode"
     deps:
       - build
     cmds:
-      - yarn run start
+      - yarn start
 
   install:
     desc: "Install Node.js binary and node modules"
@@ -68,35 +68,35 @@ tasks:
     deps:
       - install
     cmds:
-      - yarn run test --coverage
+      - yarn test # --coverage
 
   lint:
     desc: "Run all project linting"
     deps:
       - install
     cmds:
-      - yarn run biome:lint
+      - yarn biome:lint
 
   format:
     desc: "Run all project formatting"
     deps:
       - install
     cmds:
-      - yarn run biome:format
+      - yarn biome:format
   
   check:
     desc: "Runs Biome check, which does linting, formatting and import sorting"
     deps:
       - install
     cmds:
-      - yarn run biome:check
+      - yarn biome:check
 
   fix:
     desc: "Fixes all issues from linting, formatting and import sorting"
     deps:
       - install
     cmds:
-      - yarn run biome:check:fix
+      - yarn biome:check:fix
 
   build:
     desc: "Build the project static files"

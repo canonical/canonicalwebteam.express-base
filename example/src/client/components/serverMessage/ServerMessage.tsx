@@ -6,7 +6,6 @@ function ServerMessage() {
   const [message, setMessage] = useState("Server message");
 
   useEffect(() => {
-    console.log("fetch from the client");
     fetch("/api/test")
       .then((response) => response.json())
       .then((data) => setMessage((data as ApiResponse).message));

@@ -1,1 +1,1 @@
-yarn run biome:check
+yarn biome:check

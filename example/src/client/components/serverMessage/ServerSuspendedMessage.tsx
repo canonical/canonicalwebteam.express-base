@@ -11,9 +11,7 @@ It is not good to show the behavior of Suspense, but might be good
 for performance in cases where the component gets rendered always the same.
 
 const ServerSuspendedMessage = React.lazy(async () => {
-  console.log("Suspense called");
   const data = await delay(DELAY_SUSPENSE_MESSAGE, ssrSuspenseMessage);
-  console.log("Suspense resolved. Streaming chunk");
   return {
     default: (): React.ReactElement => {
       return (
@@ -30,9 +28,7 @@ const ServerSuspendedMessage = React.lazy(async () => {
 
 function createServerSuspendedMessage() {
   return React.lazy(async () => {
-    console.log("Suspense called");
     const data = await delay(DELAY_SUSPENSE_MESSAGE, ssrSuspenseMessage);
-    console.log("Suspense resolved. Streaming chunk");
     return {
       default: (): React.ReactElement => {
         return (

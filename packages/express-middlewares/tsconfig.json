@@ -1,19 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "useDefineForClassFields": true,
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ES2022"],
     "types": ["node"],
-    "skipLibCheck": true,
-    "baseUrl": "src",
 
-    "rootDir": "src",
-    "outDir": "dist/esm",
-    "declaration": true,
-    "declarationDir": "dist/types",
-    "declarationMap": true,
-    "sourceMap": true,
+    "baseUrl": "src",
+    "useDefineForClassFields": true,
+    "noEmit": true,
+    "isolatedModules": true,
 
     /* Linting */
     "strict": true,
@@ -23,5 +19,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

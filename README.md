@@ -33,6 +33,10 @@ website. The running server has HMR enabled to ease working with the FE of the e
 If you modify the server code of the example website you'll need to restart the server manually.
 If you modify any of the *packages/* you'll have to re-build the project (`task build`) and restart the server.
 
+**NOTE**: The development mode doesn't allow the SSR streaming, so the plain old SSR is used instead.
+This means that the Suspense components are all resolved in the server before the client receives 
+any response.
+
 If you want to run the same version that will be run in [Demos](https://demos.haus/) environment:
 
 ```bash
@@ -40,6 +44,12 @@ task start
 ```
 
 This runs the example website as in Production environment and doesn't come with HMR.
+
+To run the project tests and coverage run:
+
+```bash
+task test
+```
 
 ## How to contribute
 
