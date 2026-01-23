@@ -70,16 +70,9 @@ task check
 ```
 
 That makes sure that the project follows the appropriate linting, formatting and import sorting.
-
-Finally, before pushing you can run all the tests and the coverage tool with:
-
-```bash
-task test
-```
-
 There's a Husky hook that ensures that this runs before pushing each commit too.
 
-The changes are published to NPM when merged to the *main* branch.
+The changes will be published to NPM (by a GitHub Action) when merged to the *main* branch.
 **WARNING**: remember to update the appropriate versions in the Pull Request.
 
 ## Architecture
@@ -114,7 +107,8 @@ transpiled to JS for each package.
 - *lint:fix*: runs the linter on all the files, fixing problems according to the Biome rules.
 - *check*: runs the linter, the formatter and the imports organizer (everything according to the Biome rules), reporting problems.
 - *check:fix*: runs the linter, the formatter and the imports organizer (everything according to the Biome rules), fixing problems found.
-- *test*: runs all the unit tests and the coverage for the project.
+- *test*: runs all the unit tests for the project.
+- *coverage*: runs the coverage for the project.
 - *publish*: this runs the script to publish the package to NPM.
 
 ### Husky
@@ -126,4 +120,21 @@ The script is found in `.husky/pre-commit`.
 
 ### Testing
 
-TODO
+The tests are executed with Vitest. There is one configuration at the root level that takes care of running the tests
+for each of the packages and one configuration per package for more modularity.
+You can run the tests with one of the following commands:
+
+```bash
+task test
+yarn test
+```
+
+There is a `coverage` folder generated automatically with the results from the tests. In addition, there's Vitest UI to
+visualize those results. Run one of the following commands:
+
+```bash
+task coverage
+yarn coverage
+```
+
+And a window will be opened in your browser in which you'll be able to navigate the coverage results.
