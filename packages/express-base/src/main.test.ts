@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { add } from "./main.js";
 
 test("sums two numbers", () => {

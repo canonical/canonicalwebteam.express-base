@@ -35,7 +35,7 @@
     "biome:lint:fix": "yarn exec -- biome lint --write",
     "biome:check": "tsc -p tsconfig.types.json --noEmit && yarn exec -- biome check",
     "biome:check:fix": "tsc -p tsconfig.types.json --noEmit && yarn exec -- biome check --write",
-    "test": "echo 'no tests'"
+    "test": "vitest run"
   },
   "dependencies": {
     "@canonical/express-middlewares": "0.0.0"
@@ -45,6 +45,7 @@
     "@canonical/biome-config": "^0.10.0-experimental.4",
     "@types/node": "^25.0.3",
     "typescript": "5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   }
 }

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { mul } from "./main.js";
 
 test("multiplies two numbers", () => {
