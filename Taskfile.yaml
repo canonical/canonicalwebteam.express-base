@@ -1,0 +1,154 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  SHELL_NAME: "{{regexFind \"[a-z]+$\" .SHELL}}"
+env:
+  NODE_VERSION: "24"
+
+# Available tasks (present in all web projects):
+# - start (default)
+# - install
+# - shell
+# - clean
+# - test
+# - lint
+# - format
+# - build
+#
+# Custom tasks:
+# - check
+# - dev
+# - fix
+
+tasks:
+  default:
+    cmds:
+      - task: dev
+
+  dev:
+    desc: "Start the project in development mode"
+    deps:
+      - install
+    cmds:
+      - yarn run dev
+
+  start:
+    desc: "Build the project and run it in production mode"
+    deps:
+      - build
+    cmds:
+      - yarn run start
+
+  install:
+    desc: "Install Node.js binary and node modules"
+    deps:
+      - install-yarn
+    cmds:
+      - echo "Installation complete"
+
+  shell:
+    desc: "Open a shell to the project (added for compatibility with other projects)"
+    deps:
+      - install
+    cmds:
+      - $SHELL
+
+  clean:
+    desc: "Clean node modules and builds"
+    cmds:
+      - rm -rf example/dist example/node_modules .task
+      - rm -rf packages/express-base/dist packages/express-base/node_modules
+      - rm -rf packages/express-middlewares/dist packages/express-middlewares/node_modules
+      - rm -rf packages/yaml-responses/dist packages/yaml-responses/node_modules
+
+  test:
+    desc: "Run all project tests"
+    deps:
+      - install
+    cmds:
+      - yarn run test --coverage
+
+  lint:
+    desc: "Run all project linting"
+    deps:
+      - install
+    cmds:
+      - yarn run biome:lint
+
+  format:
+    desc: "Run all project formatting"
+    deps:
+      - install
+    cmds:
+      - yarn run biome:format
+  
+  check:
+    desc: "Runs Biome check, which does linting, formatting and import sorting"
+    deps:
+      - install
+    cmds:
+      - yarn run biome:check
+
+  fix:
+    desc: "Fixes all issues from linting, formatting and import sorting"
+    deps:
+      - install
+    cmds:
+      - yarn run biome:check:fix
+
+  build:
+    desc: "Build the project static files"
+    deps:
+      - install
+    cmds:
+      - yarn build
+
+  # Versioning setup
+  setup-mise:
+    internal: true
+    desc: "Setup mise"
+    preconditions:
+      - which curl
+    status:
+      - which mise
+    cmds:
+      - curl https://mise.run/{{.SHELL_NAME}} | sh
+
+  setup-node:
+    internal: true
+    deps:
+      - setup-mise
+    status:
+      - which node
+      - node -v | grep "^v{{ .NODE_VERSION }}"
+    cmds:
+      - mise use node@{{ .NODE_VERSION }}
+
+  setup-tools:
+    internal: true
+    deps:
+      - setup-node
+    status:
+      - which yarn
+      - which lerna
+      - which nx
+    cmds:
+      - mise use npm:yarn
+      - mise use npm:lerna
+      - mise use npm:nx
+
+  # Node.js package manager
+  install-yarn:
+    internal: true
+    desc: "Install yarn packages"
+    deps:
+      - setup-tools
+    sources:
+      - yarn.lock
+      - package.json
+    generates:
+      - "node_modules/**"
+    cmds:
+      - yarn install

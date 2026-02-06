@@ -1,0 +1,5 @@
+[tools]
+node = "24"
+"npm:lerna" = "latest"
+"npm:nx" = "latest"
+"npm:yarn" = "latest"

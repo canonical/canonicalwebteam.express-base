@@ -1,0 +1,45 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server/entry-server.ts",
+    "dev:debug": "tsx --inspect-brk=0.0.0.0:9229 src/server/entry-server.ts",
+    "build": "rm -rf dist/ && yarn run build:client && yarn run build:server",
+    "build:client": "vite build",
+    "build:server": "vite build --ssr src/server/entry-server.ts --outDir dist/server",
+    "start": "NODE_ENV=production node dist/server/entry-server.js",
+    "biome:format": "yarn exec -- biome format",
+    "biome:format:fix": "yarn exec -- biome format --write src/client/components/app/App.css",
+    "biome:lint": "yarn exec -- biome lint",
+    "biome:lint:fix": "yarn exec -- biome lint --write",
+    "biome:check": "yarn exec -- biome check",
+    "biome:check:fix": "yarn exec -- biome check --write",
+    "test": "echo 'The example website has no tests'"
+  },
+  "dependencies": {
+    "@canonical/express-base": "0.0.0",
+    "@canonical/express-middlewares": "0.0.0",
+    "@canonical/yaml-responses": "0.0.0",
+    "compression": "^1.8.0",
+    "express": "^5.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sirv": "^3.0.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "@canonical/biome-config": "^0.10.0-experimental.4",
+    "@canonical/react-ssr": "^0.10.0-experimental.4",
+    "@types/compression": "^1.8.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react-swc": "^4.2.2",
+    "rsc-html-stream": "^0.0.7",
+    "tsx": "^4.21.0",
+    "vite": "^7.2.7"
+  }
+}
