@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx src/server/entry-server.ts",
     "dev:debug": "tsx --inspect-brk=0.0.0.0:9229 src/server/entry-server.ts",
-    "build": "rm -rf dist/ && yarn run build:client && yarn run build:server",
+    "build": "rm -rf dist/ && yarn build:client && yarn build:server",
     "build:client": "vite build",
     "build:server": "vite build --ssr src/server/entry-server.ts --outDir dist/server",
     "start": "NODE_ENV=production node dist/server/entry-server.js",
@@ -16,7 +16,8 @@
     "biome:lint:fix": "yarn exec -- biome lint --write",
     "biome:check": "yarn exec -- biome check",
     "biome:check:fix": "yarn exec -- biome check --write",
-    "test": "echo 'The example website has no tests'"
+    "test": "echo 'The example website has no tests'",
+    "coverage": "yarn test"
   },
   "dependencies": {
     "@canonical/express-base": "0.0.0",
@@ -40,6 +41,6 @@
     "@vitejs/plugin-react-swc": "^4.2.2",
     "rsc-html-stream": "^0.0.7",
     "tsx": "^4.21.0",
-    "vite": "^7.2.7"
+    "vite": "^7.3.1"
   }
 }

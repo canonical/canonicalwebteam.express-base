@@ -1,47 +1,57 @@
 {
-  "name": "express-base-packages",
-  "private": true,
-  "version": "0.0.1",
-  "description": "Canonical's Express base implementation and middlewares",
-  "author": {
-    "email": "webteam@canonical.com",
-    "name": "Canonical Webteam"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/canonical/canonicalwebteam.express-base"
-  },
-  "license": "LGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/canonical/canonicalwebteam.express-base/issues"
-  },
-  "homepage": "https://github.com/canonical/canonicalwebteam.express-base#readme",
-  "workspaces": [
-    "example",
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "lerna run dev --scope=example",
-    "dev:debug": "lerna run dev:debug --scope=example",
-    "build": "lerna run build",
-    "start": "lerna run start --scope=example",
-    "biome:format": "lerna run biome:format",
-    "biome:format:fix": "lerna run biome:format:fix",
-    "biome:lint": "lerna run biome:lint",
-    "biome:lint:fix": "lerna run biome:lint:fix",
-    "biome:check": "lerna run biome:check",
-    "biome:check:fix": "lerna run biome:check:fix",
-    "test": "lerna run test",
-    "publish": "lerna run build && lerna publish --no-private",
-    "postinstall": "husky",
-    "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
-  },
-  "devDependencies": {
-    "husky": "^9.1.7",
-    "lerna": "^9.0.3",
-    "nx": "22.3.3",
-    "pinst": "^3.0.0"
-  },
-  "dependencies": {}
+	"name": "express-base-packages",
+	"private": true,
+	"version": "0.0.1",
+	"description": "Canonical's Express base implementation and middlewares",
+	"author": {
+		"email": "webteam@canonical.com",
+		"name": "Canonical Webteam"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/canonical/canonicalwebteam.express-base"
+	},
+	"license": "LGPL-3.0",
+	"bugs": {
+		"url": "https://github.com/canonical/canonicalwebteam.express-base/issues"
+	},
+	"homepage": "https://github.com/canonical/canonicalwebteam.express-base#readme",
+	"workspaces": [
+		"example",
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "lerna run dev --scope=example",
+		"dev:debug": "lerna run dev:debug --scope=example",
+		"build": "lerna run build",
+		"start": "lerna run start --scope=example",
+		"biome:format": "lerna run biome:format",
+		"biome:format:fix": "lerna run biome:format:fix",
+		"biome:lint": "lerna run biome:lint",
+		"biome:lint:fix": "lerna run biome:lint:fix",
+		"biome:check": "lerna run biome:check",
+		"biome:check:fix": "lerna run biome:check:fix",
+		"test": "vitest run",
+		"coverage": "vitest --ui --coverage",
+		"publish": "lerna run build && lerna publish --no-private",
+		"postinstall": "husky",
+		"prepack": "pinst --disable",
+		"postpack": "pinst --enable"
+	},
+	"devDependencies": {
+		"@vitest/coverage-istanbul": "^4.0.18",
+		"@vitest/ui": "^4.0.18",
+		"husky": "^9.1.7",
+		"lerna": "^9.0.3",
+		"lint-staged": "^16.2.7",
+		"nx": "22.3.3",
+		"pinst": "^3.0.0",
+		"vitest": "^4.0.18"
+	},
+	"dependencies": {},
+	"lint-staged": {
+		"*": [
+			"biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
+		]
+	}
 }
