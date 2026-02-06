@@ -22,6 +22,7 @@
   "dependencies": {
     "@canonical/express-base": "0.0.0",
     "@canonical/express-middlewares": "0.0.0",
+    "@canonical/pragma-tmp-patch": "0.0.0",
     "@canonical/yaml-responses": "0.0.0",
     "compression": "^1.8.0",
     "express": "^5.1.0",

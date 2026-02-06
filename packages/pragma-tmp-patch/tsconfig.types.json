@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* used for type checking and generating the .d.ts files */
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "outDir": "dist/types",
+    "noEmit": false,
+    "rootDir": "src"
+  },
+  "exclude": ["vite.config.ts", "**/*.test.ts", "**/*.spec.ts"]
+}

@@ -1,4 +1,4 @@
-export { INITIAL_DATA_KEY } from "@canonical/express-base";
+export { INITIAL_DATA_KEY } from "@canonical/pragma-tmp-patch/constants";
 
 /* delays (in ms) */
 export const DELAY_SSR_MESSAGE = 5000;
