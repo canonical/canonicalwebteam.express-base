@@ -31,6 +31,7 @@ tasks:
     desc: "Start the project in development mode"
     deps:
       - install
+      - build
     cmds:
       - yarn dev
 

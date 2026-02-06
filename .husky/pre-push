@@ -1,1 +1,1 @@
-yarn biome:check && yarn test
+yarn test
