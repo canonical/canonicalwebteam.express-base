@@ -1,10 +1,10 @@
-import type { HTMLTemplateProps } from "@canonical/express-base";
+import type { ServerEntrypointProps } from "@canonical/pragma-tmp-patch";
 import App from "../client/components/app/App";
 import Head from "../client/components/head/Head";
 // import WindowInitDataInjector from "../server/data/WindowInitDataInjector";
 import type { WindowInitialData } from "./types/windowData";
 
-function PageSkeleton(props: HTMLTemplateProps<WindowInitialData>) {
+function PageSkeleton(props: ServerEntrypointProps<WindowInitialData>) {
   return (
     <html lang={props?.lang}>
       <head>
