@@ -19,6 +19,7 @@ export interface RendererOptions {
     RenderToPipeableStreamOptions,
     "onShellReady" | "onError" | "onShellError" | "onAllReady"
   >;
+  postRenderCallback?: (req: IncomingMessage, res: ServerResponse) => void;
 }
 
 /** The props that the server entrypoint component will receive */

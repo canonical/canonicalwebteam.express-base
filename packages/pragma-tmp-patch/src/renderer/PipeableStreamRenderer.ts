@@ -22,10 +22,11 @@ export default class PipeableStreamRenderer<
    * @return {RenderResult} The stream that was sent to the client
    */
   render: RenderHandler = (
-    _req: IncomingMessage,
+    req: IncomingMessage,
     res: ServerResponse,
   ): RenderResult => {
     const errorRef: { current: Error | undefined } = { current: undefined };
+    const renderCallback = this.options.postRenderCallback;
     let jsxStream: RenderResult;
 
     jsxStream = this.prepareRender(errorRef, {
@@ -39,6 +40,10 @@ export default class PipeableStreamRenderer<
         console.error(error);
       },
       onShellReady() {
+        if (renderCallback) {
+          renderCallback(req, res);
+        }
+
         if (!res.headersSent) {
           res.writeHead(errorRef.current ? 500 : 200, {
             "Content-Type": "text/html; charset=utf-8",

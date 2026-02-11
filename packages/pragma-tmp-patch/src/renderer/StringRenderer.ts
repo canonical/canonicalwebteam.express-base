@@ -16,20 +16,25 @@ export default class StringRenderer<
   /**
    * Renders this renderer's JSX component as a transmittable stream and sends it to the client
    * once it has been fully rendered. This means once all <Suspense> components have finished loadinig.
-   * @param _req Client's request
+   * @param req Client's request
    * @param res Response object that will be sent to the client
    * @return {RenderResult} The stream that was sent to the client
    */
   render: RenderHandler = (
-    _req: IncomingMessage,
+    req: IncomingMessage,
     res: ServerResponse,
   ): RenderResult => {
     const errorRef: { current: Error | undefined } = { current: undefined };
+    const renderCallback = this.options.postRenderCallback;
     let jsxStream: RenderResult;
 
     jsxStream = this.prepareRender(errorRef, {
       // this makes the pipeable stream work the same as the classic renderToString function
       onAllReady() {
+        if (renderCallback) {
+          renderCallback(req, res);
+        }
+
         if (!res.headersSent) {
           res.writeHead(errorRef.current ? 500 : 200, {
             "Content-Type": "text/html; charset=utf-8",

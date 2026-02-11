@@ -132,9 +132,9 @@ export default abstract class BaseRenderer<
 
   /**
    * Renders this renderer's JSX component and sends it to the client.
-   * @param _req Client's request
+   * @param req Client's request
    * @param res Response object that will be sent to the client
    * @return {RenderResult} The stream that was sent to the client
    */
-  abstract render(_req: IncomingMessage, res: ServerResponse): RenderResult;
+  abstract render(req: IncomingMessage, res: ServerResponse): RenderResult;
 }
