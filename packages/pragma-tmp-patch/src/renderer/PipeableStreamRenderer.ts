@@ -29,7 +29,7 @@ export default class PipeableStreamRenderer<
     const renderCallback = this.options.postRenderCallback;
     let jsxStream: RenderResult;
 
-    jsxStream = this.prepareRender(errorRef, {
+    jsxStream = this.prepareRender(req, res, errorRef, {
       // Early error, before the shell is prepared
       onShellError(error) {
         if (!res.headersSent) {

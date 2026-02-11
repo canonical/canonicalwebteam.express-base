@@ -19,6 +19,11 @@ export interface RendererOptions {
     RenderToPipeableStreamOptions,
     "onShellReady" | "onError" | "onShellError" | "onAllReady"
   >;
+  preRenderCallback?: <Props>(
+    req: IncomingMessage,
+    res: ServerResponse,
+    node: React.ReactElement<Props>,
+  ) => React.ReactElement<Props>;
   postRenderCallback?: (req: IncomingMessage, res: ServerResponse) => void;
 }
 

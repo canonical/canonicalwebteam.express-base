@@ -25,14 +25,14 @@ export default class StringRenderer<
     res: ServerResponse,
   ): RenderResult => {
     const errorRef: { current: Error | undefined } = { current: undefined };
-    const renderCallback = this.options.postRenderCallback;
+    const postRenderCallback = this.options.postRenderCallback;
     let jsxStream: RenderResult;
 
-    jsxStream = this.prepareRender(errorRef, {
+    jsxStream = this.prepareRender(req, res, errorRef, {
       // this makes the pipeable stream work the same as the classic renderToString function
       onAllReady() {
-        if (renderCallback) {
-          renderCallback(req, res);
+        if (postRenderCallback) {
+          postRenderCallback(req, res);
         }
 
         if (!res.headersSent) {

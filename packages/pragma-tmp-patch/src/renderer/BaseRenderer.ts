@@ -112,11 +112,18 @@ export default abstract class BaseRenderer<
   }
 
   protected prepareRender(
+    req: IncomingMessage,
+    res: ServerResponse,
     errorRef: { current: Error | undefined },
     renderOptions: RenderToPipeableStreamOptions,
   ): RenderResult {
     const props = this.getComponentProps();
-    const jsx = createElement(this.Component, props);
+    let jsx = createElement(this.Component, props);
+
+    const preRenderCallback = this.options.preRenderCallback;
+    if (preRenderCallback) {
+      jsx = preRenderCallback(req, res, jsx);
+    }
 
     const jsxStream = renderToPipeableStream(jsx, {
       ...this.enrichRendererOptions(props),
