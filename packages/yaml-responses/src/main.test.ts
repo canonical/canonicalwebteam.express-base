@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
-import { mul } from "./main.js";
+import { yamlRedirects } from "./main.js";
 
-test("multiplies two numbers", () => {
-  expect(mul(4, 7)).toBe(28);
+// TODO improve test
+test("is an express middleware", () => {
+  expect(yamlRedirects("")).toBeInstanceOf(Function);
 });
