@@ -206,6 +206,9 @@ describe("errorHandler", () => {
     });
 
     it("should still send response if onError hook throws", async () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       const onError = vi.fn(() => {
         throw new Error("Hook error");
       });
@@ -225,6 +228,7 @@ describe("errorHandler", () => {
 
       expect(res.status).toBe(404);
       expect(onError).toHaveBeenCalled();
+      consoleSpy.mockRestore();
     });
   });
 
