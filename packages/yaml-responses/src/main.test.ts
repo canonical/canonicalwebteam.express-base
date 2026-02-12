@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import { describe, expect, test, vi } from "vitest";
-import { yamlDeleted, yamlRedirects } from "./main.js";
+import { describe, expect, type Mock, test, vi } from "vitest";
+import { HttpGoneError, yamlDeleted, yamlRedirects } from "./main.js";
 
 type ExpressReq = Parameters<RequestHandler>[0];
 type ExpressRes = Parameters<RequestHandler>[1];
@@ -120,31 +120,35 @@ describe("yamlDeleted", () => {
     const middleware = yamlDeleted(YAML.MATCH);
     const [req, res, next] = reqHandlerParamMockFactory();
     middleware(req, res, next);
-    expect(next).not.toHaveBeenCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(410);
+    expect(next).toHaveBeenCalled();
+    // check that the passed parameter was an error
+    expect((next as Mock).mock.lastCall![0]).toBeInstanceOf(HttpGoneError);
   });
 
   test("deletes when it finds a regex match", () => {
     const middleware = yamlDeleted(YAML.REGEX_MATCH);
     const [req, res, next] = reqHandlerParamMockFactory();
     middleware(req, res, next);
-    expect(next).not.toHaveBeenCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(410);
+    expect(next).toHaveBeenCalled();
+    // check that the passed parameter was an error
+    expect((next as Mock).mock.lastCall![0]).toBeInstanceOf(HttpGoneError);
   });
 
   test("deletes when it finds a regex match with capture group", () => {
     const middleware = yamlDeleted(YAML.REGEX_MATCH_WITH_CAPTURE);
     const [req, res, next] = reqHandlerParamMockFactory();
     middleware(req, res, next);
-    expect(next).not.toHaveBeenCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(410);
+    expect(next).toHaveBeenCalled();
+    // check that the passed parameter was an error
+    expect((next as Mock).mock.lastCall![0]).toBeInstanceOf(HttpGoneError);
   });
 
   test("deletes when it finds a regex match with named capture group", () => {
     const middleware = yamlDeleted(YAML.REGEX_MATCH_WITH_NAMED_CAPTURE);
     const [req, res, next] = reqHandlerParamMockFactory();
     middleware(req, res, next);
-    expect(next).not.toHaveBeenCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(410);
+    expect(next).toHaveBeenCalled();
+    // check that the passed parameter was an error
+    expect((next as Mock).mock.lastCall![0]).toBeInstanceOf(HttpGoneError);
   });
 });

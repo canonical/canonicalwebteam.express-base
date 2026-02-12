@@ -24,16 +24,23 @@ export const yamlRedirects = (
   return middleware;
 };
 
+export class HttpGoneError extends Error {
+  constructor() {
+    super("410 Gone");
+  }
+}
+
 export const yamlDeleted = (yaml: string): RequestHandler => {
   const deletedMap = (load(yaml ?? "") ?? {}) as Record<string, string>;
   const deletedRegex = Object.keys(deletedMap);
 
-  const middleware: RequestHandler = (req, res, next) => {
+  const middleware: RequestHandler = (req, _, next) => {
     for (const regexStr of deletedRegex) {
       const r = RegExp(regexStr);
 
-      // TODO: what do we render here?
-      if (req.path.match(r)) return res.sendStatus(410);
+      if (req.path.match(r)) {
+        return next(new HttpGoneError());
+      }
     }
 
     next();
