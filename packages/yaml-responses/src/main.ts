@@ -5,15 +5,15 @@ export const yamlRedirects = (
   yaml: string,
   permanent = false,
 ): RequestHandler => {
-  const redirectsMap = load(yaml ?? "") ?? ({} as Record<string, string>);
+  const redirectsMap = (load(yaml ?? "") ?? {}) as Record<string, string>;
 
   const middleware: RequestHandler = (req, res, next) => {
-    for (const [regexStr, replacements] of Object.entries(redirectsMap)) {
+    for (const [regexStr, redirectStr] of Object.entries(redirectsMap)) {
       const r = RegExp(regexStr);
       const matches = req.path.match(r);
 
       if (matches) {
-        const redirectUrl = req.path.replace(r, replacements);
+        const redirectUrl = req.path.replace(r, redirectStr);
         return res.redirect(permanent ? 301 : 302, redirectUrl);
       }
     }
@@ -25,7 +25,7 @@ export const yamlRedirects = (
 };
 
 export const yamlDeleted = (yaml: string): RequestHandler => {
-  const deletedMap = load(yaml ?? "") ?? ({} as Record<string, string>);
+  const deletedMap = (load(yaml ?? "") ?? {}) as Record<string, string>;
   const deletedRegex = Object.keys(deletedMap);
 
   const middleware: RequestHandler = (req, res, next) => {
