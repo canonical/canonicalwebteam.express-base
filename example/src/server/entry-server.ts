@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import { errorHandler, notFoundHandler } from "@canonical/express-base";
 import express from "express";
 import { IS_PRODUCTION, PORT } from "./constants";
 
@@ -13,11 +13,25 @@ if (IS_PRODUCTION) {
   await setupDev(app);
 }
 
-// An error handling middleware
-app.use((_err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  res.status(500);
-  res.send("Oops, something went wrong.");
-});
+// 404 handler for unmatched routes
+app.use(notFoundHandler());
+
+// Error handling middleware (must be last)
+// Express error handlers have the 4- rgument signature (err, req, res, next).
+// It only routes to them when a previous middleware or route calls next(error) or throws.
+// If its placed before routes, there are no errors to catch yet because the routes haven't run.
+// It needs to sit after everything so it can catch errors from all the routes and middleware above it.
+app.use(
+  errorHandler({
+    isDev: !IS_PRODUCTION,
+    onError: (error, req, _res, statusCode) => {
+      console.error(
+        `[${new Date().toISOString()}] ${statusCode} ${req.method} ${req.url}`,
+        error,
+      );
+    },
+  }),
+);
 
 // Start http server
 app.listen(PORT, () => {

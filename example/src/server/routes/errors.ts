@@ -1,0 +1,104 @@
+import {
+  BadRequestError,
+  errorHandler,
+  ForbiddenError,
+  InternalServerError,
+  NotFoundError,
+  ServiceUnavailableError,
+  UnauthorizedError,
+} from "@canonical/express-base";
+import { Router } from "express";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
+import { CustomErrorPage } from "../components/CustomErrorPage";
+import { ErrorDemoPage } from "../components/ErrorDemoPage";
+
+const router = Router();
+
+// Demo navigation page rendered as a React component
+router.get("/", (_req, res) => {
+  const html = `<!DOCTYPE html>${renderToString(createElement(ErrorDemoPage))}`;
+  res.type("html").send(html);
+});
+
+const prodRouter = Router();
+
+prodRouter.get("/bad-request", () => {
+  throw new BadRequestError("Missing required field: email", {
+    field: "email",
+    code: "MISSING_FIELD",
+  });
+});
+
+prodRouter.get("/not-found", () => {
+  throw new NotFoundError("The requested user was not found");
+});
+
+prodRouter.get("/internal", () => {
+  throw new InternalServerError("Database connection failed");
+});
+
+prodRouter.get("/unavailable", () => {
+  throw new ServiceUnavailableError("Service is under maintenance");
+});
+
+prodRouter.use(
+  errorHandler({
+    isDev: false,
+    onError: (error, req, _res, statusCode) => {
+      console.error(
+        `[Prod] [${new Date().toISOString()}] ${statusCode} ${req.method} ${req.url}`,
+        error,
+      );
+    },
+  }),
+);
+
+router.use("/prod", prodRouter);
+
+const customRouter = Router();
+
+customRouter.get("/not-found", () => {
+  throw new NotFoundError("The requested page was not found");
+});
+
+customRouter.get("/internal", () => {
+  throw new InternalServerError("Database connection failed");
+});
+
+customRouter.get("/bad-request", () => {
+  throw new BadRequestError("Invalid input data", {
+    field: "username",
+    code: "INVALID_FORMAT",
+  });
+});
+
+customRouter.get("/unauthorized", () => {
+  throw new UnauthorizedError("Session expired");
+});
+
+customRouter.get("/forbidden", () => {
+  throw new ForbiddenError("Admin access required");
+});
+
+customRouter.get("/unavailable", () => {
+  throw new ServiceUnavailableError("Scheduled maintenance in progress");
+});
+
+// isDev: false so the errorComponent is used (dev mode always shows the debug page)
+customRouter.use(
+  errorHandler({
+    isDev: false,
+    errorComponent: CustomErrorPage,
+    onError: (error, req, _res, statusCode) => {
+      console.error(
+        `[Custom] [${new Date().toISOString()}] ${statusCode} ${req.method} ${req.url}`,
+        error,
+      );
+    },
+  }),
+);
+
+router.use("/custom", customRouter);
+
+export default router;

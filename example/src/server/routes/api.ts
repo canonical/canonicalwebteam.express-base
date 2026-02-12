@@ -1,4 +1,12 @@
-import { add } from "@canonical/express-base";
+import {
+  add,
+  BadRequestError,
+  ForbiddenError,
+  InternalServerError,
+  NotFoundError,
+  ServiceUnavailableError,
+  UnauthorizedError,
+} from "@canonical/express-base";
 import { sub } from "@canonical/express-middlewares";
 import { mul } from "@canonical/yaml-responses";
 import { Router } from "express";
@@ -15,28 +23,42 @@ router.get("/test", async (_, res) => {
   res.json(data);
 });
 
-/** 
-
-// Example on how to use another service to retrieve responses:
-
-const apiHost = process.env.FLASK_BACKEND_HOST || "localhost";
-const apiPort = process.env.FLASK_BACKEND_PORT || 5010;
-
-router.all("*all", async (req, res) => {
-  const redirectUrl = `http://${apiHost}:${apiPort.toString()}${req.originalUrl}`;
-  console.log(`Forwarding request to Flask BE: ${redirectUrl}`);
-  try {
-    const response = await fetch(redirectUrl);
-    const data = await response.json();
-    res.json(data);
-  } catch (e) {
-    if (e instanceof Error) {
-      console.log(e);
-      res.status(500).end(e.message);
-    }
-  }
+router.get("/error/bad-request", () => {
+  throw new BadRequestError("Missing required field: email", {
+    field: "email",
+    code: "MISSING_FIELD",
+  });
 });
 
-*/
+router.get("/error/unauthorized", () => {
+  throw new UnauthorizedError("Invalid or expired token");
+});
+
+router.get("/error/forbidden", () => {
+  throw new ForbiddenError(
+    "You do not have permission to access this resource",
+  );
+});
+
+router.get("/error/not-found", () => {
+  throw new NotFoundError("The requested user was not found");
+});
+
+router.get("/error/internal", () => {
+  throw new InternalServerError("Database connection failed");
+});
+
+router.get("/error/unavailable", () => {
+  throw new ServiceUnavailableError("Service is under maintenance");
+});
+
+router.get("/error/generic", () => {
+  throw new Error("Something unexpected happened");
+});
+
+router.get("/error/async", async () => {
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  throw new NotFoundError("Async route: resource not found after lookup");
+});
 
 export default router;

@@ -39,6 +39,10 @@ function App({ data }: { data: WindowInitialData | undefined }) {
         />
       )}
       <ServerMessage />
+
+      <p>
+        <a href="/errors">Error handling demo</a>
+      </p>
     </>
   );
 }

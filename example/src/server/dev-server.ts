@@ -7,6 +7,7 @@ import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
 import apiRoute from "./routes/api";
+import errorsRoute from "./routes/errors";
 
 async function setUpDevServer(app: Application): Promise<ViteDevServer> {
   const vite = await createServer({
@@ -36,8 +37,9 @@ export async function setupDev(app: Application) {
   });
 
   app.use("/api", apiRoute);
+  app.use("/errors", errorsRoute);
 
-  app.use("*all", async (req, res, next: NextFunction) => {
+  app.use(["/", "/suspense"], async (req, res, next: NextFunction) => {
     try {
       const url = req.originalUrl;
       console.log(`Rendering ${url}`);
