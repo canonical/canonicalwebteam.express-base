@@ -12,10 +12,28 @@ export const yamlRedirects = (
       const r = RegExp(regexStr);
       const matches = req.path.match(r);
 
-      if (!matches) continue;
+      if (matches) {
+        const redirectUrl = req.path.replace(r, replacements);
+        return res.redirect(permanent ? 301 : 302, redirectUrl);
+      }
+    }
 
-      const redirectUrl = req.path.replace(r, replacements);
-      return res.redirect(permanent ? 301 : 302, redirectUrl);
+    next();
+  };
+
+  return middleware;
+};
+
+export const yamlDeleted = (yaml: string): RequestHandler => {
+  const deletedMap = load(yaml) as Record<string, string>;
+  const deletedRegex = Object.keys(deletedMap);
+
+  const middleware: RequestHandler = (req, res, next) => {
+    for (const regexStr of deletedRegex) {
+      const r = RegExp(regexStr);
+
+      // TODO: what do we render here?
+      if (req.path.match(r)) return res.sendStatus(410);
     }
 
     next();
