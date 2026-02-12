@@ -1,9 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
 import { IS_PRODUCTION, PORT } from "./constants";
+import yamlResponses from "./yaml-responses";
 
 // Create http server
 const app = express();
+
+app.use(...yamlResponses);
 
 if (IS_PRODUCTION) {
   const setupProd = (await import("./prod-server")).setupProd;
