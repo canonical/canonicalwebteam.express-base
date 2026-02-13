@@ -7,6 +7,7 @@ import { BASE, TEMPLATE_HTML } from "./constants";
 import fetchInitialData from "./data/initialData";
 import render from "./renderer";
 import apiRoute from "./routes/api";
+import errorsRoute from "./routes/errors";
 
 export function setupProd(app: Application) {
   app.use(compression());
@@ -17,9 +18,10 @@ export function setupProd(app: Application) {
   );
 
   app.use("/api", apiRoute);
+  app.use("/errors", errorsRoute);
 
   app.use(
-    "*all",
+    ["/", "/suspense"],
     [serveStream],
     async (req: Request, res: Response, next: NextFunction) => {
       try {
