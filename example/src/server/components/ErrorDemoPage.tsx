@@ -1,3 +1,5 @@
+import type { ServerEntrypointProps } from "@canonical/pragma-tmp-patch";
+
 const css = `
   body {
     font-family: system-ui, sans-serif;
@@ -57,15 +59,18 @@ function Section({
   );
 }
 
-export function ErrorDemoPage() {
+export function ErrorDemoPage(props: ServerEntrypointProps<null>) {
   return (
-    <html lang="en">
+    <html lang={props?.lang ?? "en"}>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Error Handling Demo</title>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: CSS in a style tag is not an XSS vector */}
         <style dangerouslySetInnerHTML={{ __html: css }} />
+        {props?.otherHeadElements}
+        {props?.linkElements}
+        {props?.scriptElements}
       </head>
       <body>
         <h1>Error Handling Demo</h1>

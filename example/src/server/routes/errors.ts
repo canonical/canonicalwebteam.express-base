@@ -7,18 +7,19 @@ import {
   ServiceUnavailableError,
   UnauthorizedError,
 } from "@canonical/express-base";
+import { StringRenderer } from "@canonical/pragma-tmp-patch";
 import { Router } from "express";
-import { createElement } from "react";
-import { renderToString } from "react-dom/server";
 import { CustomErrorPage } from "../components/CustomErrorPage";
 import { ErrorDemoPage } from "../components/ErrorDemoPage";
 
 const router = Router();
 
-// Demo navigation page rendered as a React component
-router.get("/", (_req, res) => {
-  const html = `<!DOCTYPE html>${renderToString(createElement(ErrorDemoPage))}`;
-  res.type("html").send(html);
+// Demo navigation page rendered via StringRenderer
+router.get("/", (req, res, next) => {
+  const result = new StringRenderer(ErrorDemoPage, null).render(req, res);
+  if (result instanceof Error) {
+    next(result);
+  }
 });
 
 const prodRouter = Router();
