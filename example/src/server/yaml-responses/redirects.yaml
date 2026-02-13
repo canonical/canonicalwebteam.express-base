@@ -1,0 +1,2 @@
+^/test/redirect$: /api/test
+^/(?<path>.*)\.html$: /$<path>
