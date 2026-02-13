@@ -56,6 +56,7 @@ export function errorHandler(options: ErrorHandlerOptions = {}) {
         statusCode,
         statusMessage,
         isDev,
+        options.nonce,
       );
       const html = renderHtmlPage(context, isDev, options);
       res.type("html").send(html);
@@ -95,6 +96,7 @@ function buildErrorPageContext(
   statusCode: number,
   statusMessage: string,
   isDev: boolean,
+  nonce?: string,
 ): ErrorPageContext {
   const isServerError = statusCode >= 500;
 
@@ -103,6 +105,7 @@ function buildErrorPageContext(
     statusMessage,
     errorName: error.name,
     errorMessage: getErrorMessage(error, isServerError, isDev),
+    ...(nonce ? { nonce } : {}),
   };
 
   if (isDev) {

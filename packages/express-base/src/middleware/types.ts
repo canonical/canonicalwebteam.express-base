@@ -8,6 +8,8 @@ export interface ErrorPageContext {
   errorMessage: string;
   details?: unknown;
   stack?: string;
+  // CSP nonce applied to inline <style> tags in built-in error pages.
+  nonce?: string;
   requestDetails?: {
     method: string;
     url: string;
@@ -35,6 +37,9 @@ export interface ErrorHandlerOptions {
   // React component for production error pages, rendered via renderToString.
   // Takes precedence over prodTemplate if both are provided.
   errorComponent?: ComponentType<ErrorPageContext>;
+
+  // CSP nonce for inline <style> tags in built-in error pages.
+  nonce?: string;
 }
 
 export interface ErrorResponse {

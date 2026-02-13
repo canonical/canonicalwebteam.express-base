@@ -1,3 +1,32 @@
+const css = `
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #333;
+  }
+  h1 {
+    font-weight: 500;
+  }
+  pre {
+    background: #f6f6f6;
+    padding: 0.75rem;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    margin: 0.5rem 0 1rem;
+    border-left: 3px solid #ddd;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li {
+    margin-bottom: 0.25rem;
+  }
+`;
+
 function Section({
   title,
   code,
@@ -12,25 +41,11 @@ function Section({
   return (
     <>
       <h2>{title}</h2>
-      {code && (
-        <pre
-          style={{
-            background: "#f6f6f6",
-            padding: "0.75rem",
-            overflowX: "auto",
-            fontSize: "0.82rem",
-            lineHeight: 1.45,
-            margin: "0.5rem 0 1rem",
-            borderLeft: "3px solid #ddd",
-          }}
-        >
-          {code}
-        </pre>
-      )}
+      {code && <pre>{code}</pre>}
       {links && (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul>
           {links.map((link) => (
-            <li key={link.href} style={{ marginBottom: "0.25rem" }}>
+            <li key={link.href}>
               <a href={link.href}>{link.label}</a>
               {link.note && <> — {link.note}</>}
             </li>
@@ -49,17 +64,11 @@ export function ErrorDemoPage() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Error Handling Demo</title>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: CSS in a style tag is not an XSS vector */}
+        <style dangerouslySetInnerHTML={{ __html: css }} />
       </head>
-      <body
-        style={{
-          fontFamily: "system-ui, sans-serif",
-          maxWidth: 700,
-          margin: "2rem auto",
-          padding: "0 1rem",
-          color: "#333",
-        }}
-      >
-        <h1 style={{ fontWeight: 500 }}>Error Handling Demo</h1>
+      <body>
+        <h1>Error Handling Demo</h1>
         <p>
           Routes for testing <code>@canonical/express-base</code> error
           handling.

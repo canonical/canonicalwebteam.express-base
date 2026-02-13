@@ -1,92 +1,116 @@
 import type { ErrorPageContext } from "../middleware/types.js";
 import { formatJson } from "./utils.js";
 
-const styles = {
-  body: {
-    margin: 0,
-    boxSizing: "border-box" as const,
-    fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    background: "#1a1a1a",
-    color: "#e0e0e0",
-    lineHeight: 1.6,
-    padding: "2rem",
-  },
-  container: { maxWidth: 1200, margin: "0 auto" },
-  header: {
-    borderBottom: "2px solid #e74c3c",
-    paddingBottom: "1rem",
-    marginBottom: "2rem",
-  },
-  statusCode: {
-    fontSize: "3rem",
-    fontWeight: "bold" as const,
-    color: "#e74c3c",
-  },
-  statusMessage: { fontSize: "1.5rem", color: "#bdc3c7", marginTop: "0.5rem" },
-  section: {
-    background: "#2a2a2a",
-    borderRadius: 8,
-    padding: "1.5rem",
-    marginBottom: "1.5rem",
-    border: "1px solid #3a3a3a",
-  },
-  sectionTitle: {
-    fontSize: "1.25rem",
-    fontWeight: 600,
-    color: "#61afef",
-    marginBottom: "1rem",
-  },
-  errorName: { color: "#e74c3c", fontWeight: 600 },
-  errorMessage: { color: "#e0e0e0", fontSize: "1.1rem", marginTop: "0.5rem" },
-  pre: {
-    background: "#1a1a1a",
-    border: "1px solid #3a3a3a",
-    borderRadius: 4,
-    padding: "1rem",
-    overflowX: "auto" as const,
-    fontFamily: '"Monaco", "Menlo", "Consolas", monospace',
-    fontSize: "0.875rem",
-    lineHeight: 1.5,
-    whiteSpace: "pre-wrap" as const,
-    wordBreak: "break-all" as const,
-  },
-  requestDetails: {
-    background: "#1a1a1a",
-    border: "1px solid #3a3a3a",
-    borderRadius: 4,
-    padding: "1rem",
-    overflowX: "auto" as const,
-    fontFamily: '"Monaco", "Menlo", "Consolas", monospace',
-    fontSize: "0.875rem",
-  },
-  detailRow: {
-    display: "grid",
-    gridTemplateColumns: "150px 1fr",
-    gap: "1rem",
-    marginBottom: "0.75rem",
-    paddingBottom: "0.75rem",
-    borderBottom: "1px solid #3a3a3a",
-  },
-  detailRowLast: {
-    display: "grid",
-    gridTemplateColumns: "150px 1fr",
-    gap: "1rem",
-  },
-  detailLabel: { color: "#61afef", fontWeight: 600 },
-  detailValue: { color: "#98c379", wordBreak: "break-word" as const },
-  preFormatted: {
-    color: "#98c379",
-    wordBreak: "break-word" as const,
-    whiteSpace: "pre-wrap" as const,
-  },
-  highlight: { color: "#61afef" },
-};
+// Styles are in a <style> tag rather than an external CSS file or inline style attributes because:
+// - Error pages must be self-contained. If the server is failing, a CSS file request may also fail.
+// - <style> tags are CSP-compatible via nonce/hash, unlike inline style attributes which require unsafe-inline.
+const css = `
+  body {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+    padding: 2rem;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .header {
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+  }
+  .status-code {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #e74c3c;
+  }
+  .status-message {
+    font-size: 1.5rem;
+    color: #bdc3c7;
+    margin-top: 0.5rem;
+  }
+  .section {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #3a3a3a;
+  }
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #61afef;
+    margin-bottom: 1rem;
+  }
+  .error-name {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+  .error-message {
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+  pre {
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: "Monaco", "Menlo", "Consolas", monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .request-details {
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: "Monaco", "Menlo", "Consolas", monospace;
+    font-size: 0.875rem;
+  }
+  .detail-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #3a3a3a;
+  }
+  .detail-row-last {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 1rem;
+  }
+  .detail-label {
+    color: #61afef;
+    font-weight: 600;
+  }
+  .detail-value {
+    color: #98c379;
+    word-break: break-word;
+  }
+  .pre-formatted {
+    color: #98c379;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+  .highlight {
+    color: #61afef;
+  }
+`;
 
 function StackTrace({ stack }: { stack: string }) {
   const lines = stack.split("\n");
   return (
-    <pre style={styles.pre}>
+    <pre>
       {lines.map((line, i) => {
         const key = `${i}-${line.slice(0, 40)}`;
         const match = line.match(/^(.*?)(\(.*?:\d+:\d+\))(.*)$/);
@@ -94,7 +118,7 @@ function StackTrace({ stack }: { stack: string }) {
           return (
             <span key={key}>
               {match[1]}
-              <span style={styles.highlight}>{match[2]}</span>
+              <span className="highlight">{match[2]}</span>
               {match[3]}
               {"\n"}
             </span>
@@ -123,9 +147,9 @@ function DetailRow({
   preFormatted?: boolean;
 }) {
   return (
-    <div style={isLast ? styles.detailRowLast : styles.detailRow}>
-      <div style={styles.detailLabel}>{label}</div>
-      <div style={preFormatted ? styles.preFormatted : styles.detailValue}>
+    <div className={isLast ? "detail-row-last" : "detail-row"}>
+      <div className="detail-label">{label}</div>
+      <div className={preFormatted ? "pre-formatted" : "detail-value"}>
         {value}
       </div>
     </div>
@@ -140,6 +164,7 @@ export function DevErrorPage({
   details,
   stack,
   requestDetails,
+  nonce,
 }: ErrorPageContext) {
   const hasQuery = Boolean(
     requestDetails?.query &&
@@ -156,38 +181,40 @@ export function DevErrorPage({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{`${statusCode} - ${statusMessage}`}</title>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: CSS in a style tag is not an XSS vector */}
+        <style nonce={nonce} dangerouslySetInnerHTML={{ __html: css }} />
       </head>
-      <body style={styles.body}>
-        <div style={styles.container}>
-          <div style={styles.header}>
-            <div style={styles.statusCode}>{statusCode}</div>
-            <div style={styles.statusMessage}>{statusMessage}</div>
+      <body>
+        <div className="container">
+          <div className="header">
+            <div className="status-code">{statusCode}</div>
+            <div className="status-message">{statusMessage}</div>
           </div>
 
-          <div style={styles.section}>
-            <div style={styles.sectionTitle}>Error Details</div>
-            <div style={styles.errorName}>{errorName}</div>
-            <div style={styles.errorMessage}>{errorMessage}</div>
+          <div className="section">
+            <div className="section-title">Error Details</div>
+            <div className="error-name">{errorName}</div>
+            <div className="error-message">{errorMessage}</div>
           </div>
 
           {details !== undefined && (
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>Error Details Payload</div>
-              <pre style={styles.pre}>{formatJson(details)}</pre>
+            <div className="section">
+              <div className="section-title">Error Details Payload</div>
+              <pre>{formatJson(details)}</pre>
             </div>
           )}
 
           {stack && (
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>Stack Trace</div>
+            <div className="section">
+              <div className="section-title">Stack Trace</div>
               <StackTrace stack={stack} />
             </div>
           )}
 
           {requestDetails && (
-            <div style={styles.section}>
-              <div style={styles.sectionTitle}>Request Details</div>
-              <div style={styles.requestDetails}>
+            <div className="section">
+              <div className="section-title">Request Details</div>
+              <div className="request-details">
                 <DetailRow label="Method" value={requestDetails.method} />
                 <DetailRow label="URL" value={requestDetails.url} />
                 <DetailRow
