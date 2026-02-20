@@ -16,11 +16,6 @@ export type DynamicCSPValueFunction = (
   res: ServerResponse,
 ) => string;
 
-export type PostRenderCallback = (
-  req: IncomingMessage,
-  res: LocalServerResponse,
-) => void;
-
 export type PreRenderCallback = <Props>(
   req: IncomingMessage,
   res: LocalServerResponse,

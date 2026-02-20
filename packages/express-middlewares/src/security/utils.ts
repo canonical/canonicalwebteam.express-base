@@ -1,10 +1,10 @@
+import crypto from "node:crypto";
 import React, {
   isValidElement,
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
 } from "react";
-// import type { PreRenderCallback } from "types";
 
 export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -40,15 +40,8 @@ export function patchReactNode(
   return React.cloneElement(element, undefined, children);
 }
 
-/*
-  // Normalize tag name (handles 'script', 'style', and custom components)
-  const tag =
-    typeof element.type === "string" ? element.type.toLowerCase() : null;
+export const calculateHash = (content: string): string =>
+  crypto.createHash("sha256").update(content).digest("base64");
 
-  let newProps: Record<string, unknown> = {};
-
-  // Inject nonce into inline script/style tags only
-  if (tag === "script" || tag === "style") {
-    newProps.nonce = nonce;
-  }
-*/
+export const calculateNonce = (): string =>
+  crypto.randomBytes(32).toString("hex");
