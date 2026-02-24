@@ -30,7 +30,19 @@ export function setupProd(app: Application) {
         if (!url.match(/suspense$/)) {
           initialData = await fetchInitialData();
         }
-        render(initialData, TEMPLATE_HTML, req, res);
+        render(
+          initialData,
+          {
+            htmlString: TEMPLATE_HTML,
+            // preRenderCallback: preRenderCb,
+            renderToPipeableStreamOptions: {
+              bootstrapScripts: [],
+              bootstrapModules: [],
+            },
+          },
+          req,
+          res,
+        );
       } catch (e) {
         console.log((e as Error)?.stack);
         next(e);

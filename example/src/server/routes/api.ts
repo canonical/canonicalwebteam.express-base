@@ -1,5 +1,4 @@
 import {
-  add,
   BadRequestError,
   ForbiddenError,
   InternalServerError,
@@ -7,7 +6,6 @@ import {
   ServiceUnavailableError,
   UnauthorizedError,
 } from "@canonical/express-base";
-import { sub } from "@canonical/express-middlewares";
 import { Router } from "express";
 
 import { type ApiResponse, DELAY_API_CALL, delay } from "../../shared";
@@ -15,9 +13,8 @@ import { type ApiResponse, DELAY_API_CALL, delay } from "../../shared";
 const router = Router();
 
 router.get("/test", async (_, res) => {
-  const result = add(sub(25 * 2, 10), 2);
   // example response from an API
-  const data: ApiResponse = { message: `The API returned ${result}` };
+  const data: ApiResponse = { message: `API says 'Hi'` };
   await delay(DELAY_API_CALL, data);
   res.json(data);
 });

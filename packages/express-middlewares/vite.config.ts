@@ -11,6 +11,7 @@ export default defineConfig({
       formats: ["es"],
     },
     emptyOutDir: false,
+    minify: false,
     rollupOptions: {
       external: (id) => !id.startsWith(".") && !id.startsWith("/"),
       output: {

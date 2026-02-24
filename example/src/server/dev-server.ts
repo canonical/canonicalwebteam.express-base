@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
+import type { RendererOptions } from "@canonical/pragma-tmp-patch";
 import type { RenderResult } from "@canonical/react-ssr/renderer";
 import type { Application, NextFunction } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
@@ -56,7 +57,7 @@ export async function setupDev(app: Application) {
 
       const render: (
         windowData: WindowInitialData | null,
-        htmlTemplate: string,
+        options: RendererOptions,
         req: IncomingMessage,
         res: ServerResponse,
       ) => RenderResult = (await vite.ssrLoadModule("src/server/renderer.tsx"))
@@ -66,7 +67,18 @@ export async function setupDev(app: Application) {
       if (!url.match(/suspense$/)) {
         initialData = await fetchInitialData();
       }
-      const result = render(initialData, template, req, res);
+      const result = render(
+        initialData,
+        {
+          htmlString: template,
+          renderToPipeableStreamOptions: {
+            bootstrapScripts: [],
+            bootstrapModules: [],
+          },
+        },
+        req,
+        res,
+      );
 
       // Handle render errors
       if (result instanceof Error) {

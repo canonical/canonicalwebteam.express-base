@@ -10,25 +10,16 @@ export interface RendererOptions {
   /** An HTML string to extract the head tags from */
   htmlString?: string;
   /**
-   * Options to pass to `react-dom/server.renderToPipeableStream`
-   * We specifically exclude `onShellReady()`, `onError()`, `onShellError()` and `onAllReady()` as they are
-   * implemented by `StringRenderer.render()` and `PipeableStreamRenderer.render()`.
-   * See https://react.dev/reference/react-dom/server/renderToPipeableStream#parameters
+   * Options to pass to `react-dom/server.renderToPipeableStream`.
+   * See https://react.dev/reference/react-dom/server/renderToPipeableStream#parameters.
    */
-  renderToPipeableStreamOptions?: Omit<
-    RenderToPipeableStreamOptions,
-    "onShellReady" | "onError" | "onShellError" | "onAllReady"
-  >;
-  preRenderCallback?: <Props>(
-    req: IncomingMessage,
-    res: ServerResponse,
-    node: React.ReactElement<Props>,
-  ) => React.ReactElement<Props>;
-  postRenderCallback?: (req: IncomingMessage, res: ServerResponse) => void;
+  renderToPipeableStreamOptions?: RenderToPipeableStreamOptions;
 }
 
 /** The props that the server entrypoint component will receive */
-export interface ServerEntrypointProps<InitialData> {
+export interface ServerEntrypointProps<
+  InitialData extends Record<string, unknown>,
+> {
   /** The language of the page. This is typically read from the request headers. */
   lang?: string;
   /** The script tags to include in the page */
@@ -44,16 +35,12 @@ export interface ServerEntrypointProps<InitialData> {
   initialData?: InitialData;
 }
 
-export type ServerEntrypoint<InitialData> = React.ComponentType<
-  ServerEntrypointProps<InitialData>
->;
+export type ServerEntrypoint<InitialData extends Record<string, unknown>> =
+  React.ComponentType<ServerEntrypointProps<InitialData>>;
 
 // Expose the types for the rendering function for better type-safety in server code and caller code
 
 /** The result of rendering a React component */
 export type RenderResult = PipeableStream;
 /** A function that renders a React component */
-export type RenderHandler = (
-  req: IncomingMessage,
-  res: ServerResponse,
-) => RenderResult;
+export type RenderHandler = (req: IncomingMessage, res: ServerResponse) => void;

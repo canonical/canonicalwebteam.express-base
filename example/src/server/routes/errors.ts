@@ -7,7 +7,7 @@ import {
   ServiceUnavailableError,
   UnauthorizedError,
 } from "@canonical/express-base";
-import { StringRenderer } from "@canonical/pragma-tmp-patch";
+import { JSXRenderer } from "@canonical/pragma-tmp-patch";
 import { Router } from "express";
 import { CustomErrorPage } from "../components/CustomErrorPage";
 import { ErrorDemoPage } from "../components/ErrorDemoPage";
@@ -16,7 +16,7 @@ const router = Router();
 
 // Demo navigation page rendered via StringRenderer
 router.get("/", (req, res, next) => {
-  const result = new StringRenderer(ErrorDemoPage, null).render(req, res);
+  const result = new JSXRenderer(ErrorDemoPage, null).renderToString(req, res);
   if (result instanceof Error) {
     next(result);
   }
