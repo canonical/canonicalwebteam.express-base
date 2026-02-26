@@ -15,7 +15,7 @@ import type {
   LocalServerResponse,
   MiddlewareFunction,
   PreRenderCallback,
-} from "types";
+} from "../types";
 import { calculateHash, calculateNonce, patchReactNode } from "./utils";
 
 export enum CSPDirectiveKey {

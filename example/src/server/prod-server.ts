@@ -1,4 +1,5 @@
 import path from "node:path";
+import { nonceContentSecurityPolicy } from "@canonical/express-middlewares";
 import compression from "compression";
 import type { Application, NextFunction, Request, Response } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
@@ -16,6 +17,8 @@ export function setupProd(app: Application) {
     BASE,
     sirv(path.join(process.cwd(), "dist", "client"), { extensions: [] }),
   );
+
+  app.use(nonceContentSecurityPolicy({}));
 
   app.use("/api", apiRoute);
   app.use("/errors", errorsRoute);
@@ -38,6 +41,7 @@ export function setupProd(app: Application) {
             renderToPipeableStreamOptions: {
               bootstrapScripts: [],
               bootstrapModules: [],
+              nonce: res.locals?.nonce,
             },
           },
           req,

@@ -1,5 +1,12 @@
+import type { IncomingMessage } from "node:http";
 import { contentSecurityPolicy } from "helmet";
-import type { DynamicCSPValueFunction, MiddlewareFunction } from "types";
+import { nonceRendererFactory } from "../renderer";
+import type {
+  DynamicCSPValueFunction,
+  LocalServerResponse,
+  MiddlewareFunction,
+} from "../types";
+import { calculateNonce } from "./utils";
 
 export enum CSPDirectiveKey {
   ChildSrc = "child-src",
@@ -127,7 +134,7 @@ function mergeDirectives(
  * Canonical web team projects.
  * It doesn't make use of nonce or hashing.
  */
-export function useBaseContentSecurityPolicy(
+export function baseContentSecurityPolicy(
   directives: CSPDirectives,
   useBaseDirectives = true,
 ): MiddlewareFunction {
@@ -139,25 +146,69 @@ export function useBaseContentSecurityPolicy(
 
 /**
  * This method returns a middleware that sets the CSP header with an entrypoint to be replaced
- * with the hashes later on (at this point we still can't compute the hashes).
+ * with the hashes later on (at this point we still can't compute the hashes). It also returns a
+ * JSXRenderer object that must be used to render the page so that the hashes are properly injected
+ * in the resulting page.
  *
- * @remark We need to be about to render the page in order to be able to retrieve the contents
- * of inline script and styles.
- *
- * The methods calculate hashes for:
+ * @remark The renderer calculate hashes for:
  * - inline script tags
  * - inline style tags
  * - external scripts (with "src" attribute)
  * - external styles (link tag with "rel" set to "stylesheet")
  *
- * The only elements that need the "integrity" attribute are the external scripts and styles.
- * For the inline script and style tags the browser calculates the hash automatically and
- * checks if it's present in the CSP header.
- *
- * The hashes are added to the headers in the PreRenderCallback method that is returned.
- *
+ * The hashes are added to the headers by the Renderer, before sending the response.
+ */
+/*
 export function useHashContentSecurityPolicy(
   directives: CSPDirectives,
   useBaseDirectives = true,
-): [MiddlewareFunction, PreRenderCallback] {
+): [MiddlewareFunction, JSXRenderer] {
 */
+
+/**
+ * It provides the middleware function that take care of generating a nonce value and adding it to the CSP header.
+ * It also returns a JSXRenderer object that should be used to render the page to take advantage of
+ * automatically getting the "nonce" attribute in all <script> and <style> tags of the template HTML and
+ * having a Provider wrapping the whole application that gives the 'nonce' value to any component that
+ * needs it.
+ *
+ * @remark This method should be used for non cached pages. Otherwise, if the nonces are reused it doesn't
+ * give as much protection.
+ */
+export function nonceContentSecurityPolicy(
+  directives: CSPDirectives,
+  useBaseDirectives = true,
+): MiddlewareFunction[] {
+  const calculatedDirectives = mergeDirectives(directives, useBaseDirectives);
+  calculatedDirectives["script-src-elem"] = [
+    "'self'",
+    "blob:",
+    (_req: IncomingMessage, res: LocalServerResponse) =>
+      `'nonce-${res.locals?.nonce || ""}'`,
+    "'strict-dynamic'",
+  ];
+  calculatedDirectives["style-src"] = [
+    "'self'",
+    (_req: IncomingMessage, res: LocalServerResponse) =>
+      `'nonce-${res.locals?.nonce || ""}'`,
+    "'unsafe-inline'",
+  ];
+  const cspMiddleware = contentSecurityPolicy({
+    useDefaults: false,
+    directives: calculatedDirectives,
+  });
+  return [calculateNonceMiddleware(), cspMiddleware, nonceRendererFactory()];
+}
+
+export function calculateNonceMiddleware() {
+  return (
+    _req: IncomingMessage,
+    res: LocalServerResponse,
+    next: (error?: Error) => void,
+  ) => {
+    if (res.locals) {
+      res.locals.nonce = calculateNonce();
+    }
+    next();
+  };
+}

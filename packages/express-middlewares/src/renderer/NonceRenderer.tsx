@@ -1,26 +1,29 @@
 import {
   Extractor,
-  JSXRenderer,
   type RendererOptions,
   type ServerEntrypoint,
   type ServerEntrypointProps,
 } from "@canonical/pragma-tmp-patch";
 import type { Element } from "domhandler";
 import React, { createContext } from "react";
+import { BaseRenderer } from "./BaseRenderer";
 
 export const NonceContext = createContext("");
 
 function withNonceProvider<InitialData extends Record<string, unknown>>(
   Component: ServerEntrypoint<InitialData>,
-  nonce: string,
+  nonce?: string,
 ): ServerEntrypoint<InitialData> {
-  return function Wrapped(props: ServerEntrypointProps<InitialData>) {
-    return (
-      <NonceContext.Provider value={nonce}>
-        <Component {...props} />
-      </NonceContext.Provider>
-    );
-  };
+  if (nonce) {
+    return function Wrapped(props: ServerEntrypointProps<InitialData>) {
+      return (
+        <NonceContext.Provider value={nonce}>
+          <Component {...props} />
+        </NonceContext.Provider>
+      );
+    };
+  }
+  return Component;
 }
 
 /**
@@ -37,22 +40,22 @@ function withNonceProvider<InitialData extends Record<string, unknown>>(
  *
  * Like this they will have the nonce value if present (and nothing if no nonce available).
  */
-export class JSXNonceRenderer<
+export class NonceRenderer<
   InitialData extends Record<string, unknown>,
-> extends JSXRenderer<ServerEntrypoint<InitialData>, InitialData> {
+> extends BaseRenderer<InitialData> {
   protected nonceExtractor: NonceExtractor | undefined;
 
   constructor(
-    protected readonly nonce: string,
     protected readonly Component: ServerEntrypoint<InitialData>,
+    protected readonly nonce?: string,
     protected readonly initialData: InitialData = {} as InitialData,
     protected readonly options: RendererOptions = {},
   ) {
-    const { htmlString, ...restOptions } = options;
-    super(withNonceProvider(Component, nonce), initialData, restOptions);
-    this.nonceExtractor = htmlString
-      ? new NonceExtractor(nonce, htmlString)
-      : undefined;
+    super(withNonceProvider(Component, nonce), initialData, options);
+    this.nonceExtractor =
+      options.htmlString && nonce
+        ? new NonceExtractor(nonce, options.htmlString)
+        : undefined;
   }
 
   protected getComponentProps(): ServerEntrypointProps<InitialData> {

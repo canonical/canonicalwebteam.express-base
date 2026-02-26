@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
-import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
-import type { RendererOptions } from "@canonical/pragma-tmp-patch";
-import type { RenderResult } from "@canonical/react-ssr/renderer";
-import type { Application, NextFunction } from "express";
+import type {
+  RendererOptions,
+  RenderResult,
+} from "@canonical/pragma-tmp-patch";
+import type { Application, NextFunction, Request, Response } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
@@ -58,8 +59,8 @@ export async function setupDev(app: Application) {
       const render: (
         windowData: WindowInitialData | null,
         options: RendererOptions,
-        req: IncomingMessage,
-        res: ServerResponse,
+        req: Request,
+        res: Response,
       ) => RenderResult = (await vite.ssrLoadModule("src/server/renderer.tsx"))
         .default;
 
@@ -71,10 +72,6 @@ export async function setupDev(app: Application) {
         initialData,
         {
           htmlString: template,
-          renderToPipeableStreamOptions: {
-            bootstrapScripts: [],
-            bootstrapModules: [],
-          },
         },
         req,
         res,
