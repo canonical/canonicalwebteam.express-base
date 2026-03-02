@@ -2,5 +2,16 @@
   "extends": ["@canonical/biome-config"],
   "files": {
     "includes": ["src", "*.json"]
+  },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "useUniqueElementIds": {
+          "options": {
+            "excludedComponents": ["StaticPageSkeleton"]
+          }
+        }
+      }
+    }
   }
 }

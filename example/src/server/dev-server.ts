@@ -72,6 +72,9 @@ export async function setupDev(app: Application) {
         initialData,
         {
           htmlString: template,
+          renderToPipeableStreamOptions: {
+            onShellError: (error) => next(error),
+          },
         },
         req,
         res,

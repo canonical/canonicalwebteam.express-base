@@ -1,12 +1,15 @@
 import type { IncomingMessage } from "node:http";
 import { contentSecurityPolicy } from "helmet";
-import { nonceRendererFactory } from "../renderer";
+import { integrityRendererFactory, nonceRendererFactory } from "../renderer";
 import type {
   DynamicCSPValueFunction,
   LocalServerResponse,
   MiddlewareFunction,
 } from "../types";
-import { calculateNonce } from "./utils";
+import { generateNonce } from "./utils";
+
+export const REPLACE_SCRIPT_VALUE = "__REPLACE_SCRIPT__";
+export const REPLACE_STYLE_VALUE = "__REPLACE_STYLE__";
 
 export enum CSPDirectiveKey {
   ChildSrc = "child-src",
@@ -145,25 +148,29 @@ export function baseContentSecurityPolicy(
 }
 
 /**
- * This method returns a middleware that sets the CSP header with an entrypoint to be replaced
- * with the hashes later on (at this point we still can't compute the hashes). It also returns a
- * JSXRenderer object that must be used to render the page so that the hashes are properly injected
- * in the resulting page.
- *
- * @remark The renderer calculate hashes for:
- * - inline script tags
- * - inline style tags
- * - external scripts (with "src" attribute)
- * - external styles (link tag with "rel" set to "stylesheet")
- *
- * The hashes are added to the headers by the Renderer, before sending the response.
+ * This method provides the middleware functions and renderer appropriate to implementing
+ * hash integrity for the CSP header.
  */
-/*
-export function useHashContentSecurityPolicy(
+export function hashContentSecurityPolicy(
   directives: CSPDirectives,
   useBaseDirectives = true,
-): [MiddlewareFunction, JSXRenderer] {
-*/
+  port = 80,
+): MiddlewareFunction[] {
+  const calculatedDirectives = mergeDirectives(directives, useBaseDirectives);
+  calculatedDirectives["script-src-elem"] = [
+    "'self'",
+    "blob:",
+    `${REPLACE_SCRIPT_VALUE}`,
+    "'strict-dynamic'",
+  ];
+  calculatedDirectives["style-src"] = ["'self'", `${REPLACE_STYLE_VALUE}`];
+  const cspMiddleware = contentSecurityPolicy({
+    useDefaults: false,
+    directives: calculatedDirectives,
+  });
+
+  return [cspMiddleware, integrityRendererFactory(port)];
+}
 
 /**
  * It provides the middleware function that take care of generating a nonce value and adding it to the CSP header.
@@ -191,7 +198,6 @@ export function nonceContentSecurityPolicy(
     "'self'",
     (_req: IncomingMessage, res: LocalServerResponse) =>
       `'nonce-${res.locals?.nonce || ""}'`,
-    "'unsafe-inline'",
   ];
   const cspMiddleware = contentSecurityPolicy({
     useDefaults: false,
@@ -207,7 +213,7 @@ export function calculateNonceMiddleware() {
     next: (error?: Error) => void,
   ) => {
     if (res.locals) {
-      res.locals.nonce = calculateNonce();
+      res.locals.nonce = generateNonce();
     }
     next();
   };

@@ -5,10 +5,10 @@ import {
   type ServerEntrypointProps,
 } from "@canonical/pragma-tmp-patch";
 import type { Element } from "domhandler";
-import React, { createContext } from "react";
+import { createContext, createElement } from "react";
 import { BaseRenderer } from "./BaseRenderer";
 
-export const NonceContext = createContext("");
+export const NonceContext = createContext<string | undefined>(undefined);
 
 function withNonceProvider<InitialData extends Record<string, unknown>>(
   Component: ServerEntrypoint<InitialData>,
@@ -106,6 +106,6 @@ class NonceExtractor extends Extractor {
 
     props.key = `${element.name}_${index}`;
     props.nonce = this.nonce;
-    return React.createElement(element.name, props, elementChildren);
+    return createElement(element.name, props, elementChildren);
   }
 }

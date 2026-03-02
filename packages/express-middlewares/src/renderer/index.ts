@@ -5,7 +5,12 @@ import type {
 } from "@canonical/pragma-tmp-patch";
 import type { LocalServerResponse } from "../types";
 import { BaseRenderer } from "./BaseRenderer";
+import { IntegrityRenderer } from "./IntegrityRenderer";
 import { NonceRenderer } from "./NonceRenderer";
+
+export { BaseRenderer } from "./BaseRenderer";
+export { IntegrityContext, IntegrityRenderer } from "./IntegrityRenderer";
+export { NonceContext, NonceRenderer } from "./NonceRenderer";
 
 export function rendererFactory() {
   return (
@@ -24,7 +29,7 @@ export function rendererFactory() {
   };
 }
 
-export function integrityRendererFactory() {
+export function integrityRendererFactory(port: number) {
   return (
     _req: IncomingMessage,
     res: LocalServerResponse,
@@ -32,13 +37,13 @@ export function integrityRendererFactory() {
   ) => {
     if (res.locals) {
       res.locals.rendererFactory = <I extends InitData>(
-        params: { nonce: string } & RendererParameters<I>,
+        params: RendererParameters<I>,
       ) =>
-        new NonceRenderer(
+        new IntegrityRenderer(
           params.Component,
-          res.locals?.nonce,
           params.initialData,
           params.options,
+          port,
         );
     }
     next();
@@ -70,6 +75,8 @@ type InitData = Record<string, unknown>;
 
 type Entrypoint<I extends InitData> = ServerEntrypoint<I>;
 
+export type RootAppProps = { data: Record<string, unknown> | undefined };
+
 export type RendererParameters<I extends InitData> = {
   Component: Entrypoint<I>;
   initialData: I;
@@ -79,3 +86,5 @@ export type RendererParameters<I extends InitData> = {
 export type RendererFactory<I extends InitData> = (
   params: RendererParameters<I>,
 ) => BaseRenderer<I>;
+
+export const HTML_ROOT_REPLACE_KEY = "<!--app-html-->";

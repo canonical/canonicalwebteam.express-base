@@ -1,12 +1,13 @@
 import path from "node:path";
-import { nonceContentSecurityPolicy } from "@canonical/express-middlewares";
+import { hashContentSecurityPolicy } from "@canonical/express-middlewares";
 import compression from "compression";
 import type { Application, NextFunction, Request, Response } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import sirv from "sirv";
-import { BASE, TEMPLATE_HTML } from "./constants";
+import App from "../client/components/app/App";
+import { BASE, PORT, TEMPLATE_HTML } from "./constants";
 import fetchInitialData from "./data/initialData";
-import render from "./renderer";
+import { renderWithRoot } from "./renderer";
 import apiRoute from "./routes/api";
 import errorsRoute from "./routes/errors";
 
@@ -18,7 +19,7 @@ export function setupProd(app: Application) {
     sirv(path.join(process.cwd(), "dist", "client"), { extensions: [] }),
   );
 
-  app.use(nonceContentSecurityPolicy({}));
+  app.use(hashContentSecurityPolicy({}, true, PORT));
 
   app.use("/api", apiRoute);
   app.use("/errors", errorsRoute);
@@ -33,7 +34,8 @@ export function setupProd(app: Application) {
         if (!url.match(/suspense$/)) {
           initialData = await fetchInitialData();
         }
-        render(
+        renderWithRoot(
+          App,
           initialData,
           {
             htmlString: TEMPLATE_HTML,

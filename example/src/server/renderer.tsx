@@ -1,9 +1,13 @@
-import type { RendererFactory } from "@canonical/express-middlewares";
+import {
+  IntegrityRenderer,
+  type RendererFactory,
+  type RootAppProps,
+} from "@canonical/express-middlewares";
 import { JSXRenderer, type RendererOptions } from "@canonical/pragma-tmp-patch";
 import type { Request, Response } from "express";
-import type { WindowInitialData } from "shared/types/windowData";
 import PageSkeleton from "../shared/PageSkeleton";
-import { IS_PRODUCTION } from "./constants";
+import StaticPageSkeleton from "../shared/StaticPageSkeleton";
+import type { WindowInitialData } from "../shared/types/windowData";
 
 function getRenderMethod(
   initialData: WindowInitialData,
@@ -14,7 +18,7 @@ function getRenderMethod(
     const renderer = (
       res.locals.rendererFactory as RendererFactory<WindowInitialData>
     )({ Component: PageSkeleton, initialData, options });
-    if (IS_PRODUCTION) {
+    if (initialData.hasSuspense) {
       return renderer.renderToStream;
     }
     return renderer.renderToString;
@@ -31,7 +35,7 @@ function fallbackRenderMethod(
     initialData,
     options,
   );
-  if (IS_PRODUCTION) {
+  if (initialData.hasSuspense) {
     return renderer.renderToStream;
   }
   return renderer.renderToString;
@@ -43,6 +47,26 @@ export default function render(
   req: Request,
   res: Response,
 ) {
-  const renderer = getRenderMethod(initialData, options, res);
-  return renderer(req, res);
+  const render = getRenderMethod(initialData, options, res);
+  return render(req, res);
+}
+
+export function renderWithRoot(
+  RootComponent: React.ComponentType<RootAppProps>,
+  initialData: WindowInitialData,
+  options: RendererOptions,
+  req: Request,
+  res: Response,
+) {
+  if (res.locals?.rendererFactory) {
+    const renderer = (
+      res.locals.rendererFactory as RendererFactory<WindowInitialData>
+    )({ Component: StaticPageSkeleton, initialData, options });
+    if (renderer instanceof IntegrityRenderer) {
+      return renderer.renderToStringWithRoot(req, res, RootComponent);
+    }
+  }
+  throw new Error(
+    "Can't use renderWithRoot without having an IntegrityRenderer (provided by 'hashContentSecurityPolicy')",
+  );
 }
