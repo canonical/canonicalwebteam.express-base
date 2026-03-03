@@ -3,7 +3,7 @@ import {
   type RendererOptions,
   type ServerEntrypoint,
   type ServerEntrypointProps,
-} from "@canonical/pragma-tmp-patch";
+} from "@canonical/react-ssr/renderer";
 import type { Element } from "domhandler";
 import { createContext, createElement } from "react";
 import { BaseRenderer } from "./BaseRenderer";

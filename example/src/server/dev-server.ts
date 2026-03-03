@@ -3,7 +3,7 @@ import path from "node:path";
 import type {
   RendererOptions,
   RenderResult,
-} from "@canonical/pragma-tmp-patch";
+} from "@canonical/react-ssr/renderer";
 import type { Application, NextFunction, Request, Response } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";

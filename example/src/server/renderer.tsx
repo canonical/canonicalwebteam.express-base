@@ -1,9 +1,10 @@
 import {
+  BaseRenderer,
   IntegrityRenderer,
   type RendererFactory,
   type RootAppProps,
 } from "@canonical/express-middlewares";
-import { JSXRenderer, type RendererOptions } from "@canonical/pragma-tmp-patch";
+import type { RendererOptions } from "@canonical/react-ssr/renderer";
 import type { Request, Response } from "express";
 import PageSkeleton from "../shared/PageSkeleton";
 import StaticPageSkeleton from "../shared/StaticPageSkeleton";
@@ -30,7 +31,7 @@ function fallbackRenderMethod(
   initialData: WindowInitialData,
   options: RendererOptions,
 ) {
-  const renderer = new JSXRenderer<typeof PageSkeleton, WindowInitialData>(
+  const renderer = new BaseRenderer<WindowInitialData>(
     PageSkeleton,
     initialData,
     options,

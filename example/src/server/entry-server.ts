@@ -8,7 +8,7 @@ const app = express();
 
 app.use(...yamlResponses);
 
-if (app) {
+if (IS_PRODUCTION) {
   const setupProd = (await import("./prod-server")).setupProd;
   setupProd(app);
 } else {

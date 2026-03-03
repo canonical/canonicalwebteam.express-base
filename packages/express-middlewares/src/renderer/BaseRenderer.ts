@@ -2,7 +2,7 @@ import {
   JSXRenderer,
   type RendererOptions,
   type ServerEntrypoint,
-} from "@canonical/pragma-tmp-patch";
+} from "@canonical/react-ssr/renderer";
 
 export type HTMLTransformationFunc = (html: string) => string;
 

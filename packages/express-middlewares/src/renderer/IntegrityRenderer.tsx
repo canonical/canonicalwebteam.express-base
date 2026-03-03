@@ -5,7 +5,7 @@ import {
   type RenderHandler,
   type ServerEntrypoint,
   type ServerEntrypointProps,
-} from "@canonical/pragma-tmp-patch";
+} from "@canonical/react-ssr/renderer";
 import render from "dom-serializer";
 import {
   type ChildNode,

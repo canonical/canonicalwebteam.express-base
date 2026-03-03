@@ -1,4 +1,4 @@
-import type { ServerEntrypointProps } from "@canonical/pragma-tmp-patch";
+import type { ServerEntrypointProps } from "@canonical/react-ssr/renderer";
 import App from "../client/components/app/App";
 import Head from "../client/components/head/Head";
 import type { WindowInitialData } from "./types/windowData";

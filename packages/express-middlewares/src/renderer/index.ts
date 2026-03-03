@@ -2,7 +2,7 @@ import type { IncomingMessage } from "node:http";
 import type {
   RendererOptions,
   ServerEntrypoint,
-} from "@canonical/pragma-tmp-patch";
+} from "@canonical/react-ssr/renderer";
 import type { LocalServerResponse } from "../types";
 import { BaseRenderer } from "./BaseRenderer";
 import { IntegrityRenderer } from "./IntegrityRenderer";
