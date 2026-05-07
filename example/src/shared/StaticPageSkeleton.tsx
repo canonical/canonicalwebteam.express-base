@@ -1,9 +1,8 @@
 import type { ServerEntrypointProps } from "@canonical/react-ssr/renderer";
-import App from "../client/components/app/App";
 import Head from "../client/components/head/Head";
 import type { WindowInitialData } from "./types/windowData";
 
-function PageSkeleton(props: ServerEntrypointProps<WindowInitialData>) {
+function StaticPageSkeleton(props: ServerEntrypointProps<WindowInitialData>) {
   return (
     <html lang={props?.lang}>
       <head>
@@ -13,10 +12,14 @@ function PageSkeleton(props: ServerEntrypointProps<WindowInitialData>) {
         {props?.scriptElements}
       </head>
       <body>
-        <App data={props?.initialData} />
+        <div
+          id="root"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: root for hydration
+          dangerouslySetInnerHTML={{ __html: `<!--app-html-->` }}
+        ></div>
       </body>
     </html>
   );
 }
 
-export default PageSkeleton;
+export default StaticPageSkeleton;

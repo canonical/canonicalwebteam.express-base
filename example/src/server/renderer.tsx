@@ -1,37 +1,73 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import {
-  PipeableStreamRenderer,
-  StringRenderer,
-} from "@canonical/pragma-tmp-patch";
-import type { WindowInitialData } from "shared/types/windowData";
+  BaseRenderer,
+  IntegrityRenderer,
+  type RendererFactory,
+  type RootAppProps,
+} from "@canonical/express-middlewares";
+import type { RendererOptions } from "@canonical/react-ssr/renderer";
+import type { Request, Response } from "express";
 import PageSkeleton from "../shared/PageSkeleton";
-import { IS_PRODUCTION } from "./constants";
+import StaticPageSkeleton from "../shared/StaticPageSkeleton";
+import type { WindowInitialData } from "../shared/types/windowData";
 
-function getRenderer(initialData: WindowInitialData, htmlTemplate: string) {
-  if (IS_PRODUCTION) {
-    return new PipeableStreamRenderer<typeof PageSkeleton, WindowInitialData>(
-      PageSkeleton,
-      initialData,
-      {
-        htmlString: htmlTemplate,
-      },
-    ).render;
+function getRenderMethod(
+  initialData: WindowInitialData,
+  options: RendererOptions,
+  res: Response,
+) {
+  if (res.locals?.rendererFactory) {
+    const renderer = (
+      res.locals.rendererFactory as RendererFactory<WindowInitialData>
+    )({ Component: PageSkeleton, initialData, options });
+    if (initialData.hasSuspense) {
+      return renderer.renderToStream;
+    }
+    return renderer.renderToString;
   }
-  return new StringRenderer<typeof PageSkeleton, WindowInitialData>(
+  return fallbackRenderMethod(initialData, options);
+}
+
+function fallbackRenderMethod(
+  initialData: WindowInitialData,
+  options: RendererOptions,
+) {
+  const renderer = new BaseRenderer<WindowInitialData>(
     PageSkeleton,
     initialData,
-    {
-      htmlString: htmlTemplate,
-    },
-  ).render;
+    options,
+  );
+  if (initialData.hasSuspense) {
+    return renderer.renderToStream;
+  }
+  return renderer.renderToString;
 }
 
 export default function render(
   initialData: WindowInitialData,
-  htmlTemplate: string,
-  req: IncomingMessage,
-  res: ServerResponse,
+  options: RendererOptions,
+  req: Request,
+  res: Response,
 ) {
-  const renderer = getRenderer(initialData, htmlTemplate);
-  return renderer(req, res);
+  const render = getRenderMethod(initialData, options, res);
+  return render(req, res);
+}
+
+export function renderWithRoot(
+  RootComponent: React.ComponentType<RootAppProps>,
+  initialData: WindowInitialData,
+  options: RendererOptions,
+  req: Request,
+  res: Response,
+) {
+  if (res.locals?.rendererFactory) {
+    const renderer = (
+      res.locals.rendererFactory as RendererFactory<WindowInitialData>
+    )({ Component: StaticPageSkeleton, initialData, options });
+    if (renderer instanceof IntegrityRenderer) {
+      return renderer.renderToStringWithRoot(req, res, RootComponent);
+    }
+  }
+  throw new Error(
+    "Can't use renderWithRoot without having an IntegrityRenderer (provided by 'hashContentSecurityPolicy')",
+  );
 }

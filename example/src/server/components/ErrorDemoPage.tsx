@@ -1,4 +1,4 @@
-import type { ServerEntrypointProps } from "@canonical/pragma-tmp-patch";
+import type { ServerEntrypointProps } from "@canonical/react-ssr/renderer";
 
 const css = `
   body {
@@ -59,7 +59,8 @@ function Section({
   );
 }
 
-export function ErrorDemoPage(props: ServerEntrypointProps<null>) {
+// biome-ignore lint/complexity/noBannedTypes: no need for initial data
+export function ErrorDemoPage(props: ServerEntrypointProps<{}>) {
   return (
     <html lang={props?.lang ?? "en"}>
       <head>

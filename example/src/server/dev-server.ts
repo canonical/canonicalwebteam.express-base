@@ -1,8 +1,10 @@
 import fs from "node:fs/promises";
-import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
-import type { RenderResult } from "@canonical/react-ssr/renderer";
-import type { Application, NextFunction } from "express";
+import type {
+  RendererOptions,
+  RenderResult,
+} from "@canonical/react-ssr/renderer";
+import type { Application, NextFunction, Request, Response } from "express";
 import type { WindowInitialData } from "shared/types/windowData";
 import { createServer, type ViteDevServer } from "vite";
 import fetchInitialData from "./data/initialData";
@@ -56,9 +58,9 @@ export async function setupDev(app: Application) {
 
       const render: (
         windowData: WindowInitialData | null,
-        htmlTemplate: string,
-        req: IncomingMessage,
-        res: ServerResponse,
+        options: RendererOptions,
+        req: Request,
+        res: Response,
       ) => RenderResult = (await vite.ssrLoadModule("src/server/renderer.tsx"))
         .default;
 
@@ -66,7 +68,17 @@ export async function setupDev(app: Application) {
       if (!url.match(/suspense$/)) {
         initialData = await fetchInitialData();
       }
-      const result = render(initialData, template, req, res);
+      const result = render(
+        initialData,
+        {
+          htmlString: template,
+          renderToPipeableStreamOptions: {
+            onShellError: (error) => next(error),
+          },
+        },
+        req,
+        res,
+      );
 
       // Handle render errors
       if (result instanceof Error) {

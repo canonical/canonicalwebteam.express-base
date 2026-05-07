@@ -39,22 +39,21 @@
     "coverage": "vitest --ui --coverage"
   },
   "dependencies": {
-    "@canonical/express-middlewares": "0.0.0",
-    "domhandler": "^5.0.3",
+    "@canonical/express-middlewares": "0.0.0"
+  },
+  "peerDependencies": {
+    "express": "^5.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
-  "peerDependencies": {
-    "express": "^5.0.0"
-  },
   "devDependencies": {
-    "express": "^5.1.0",
     "@biomejs/biome": "^2.2.4",
     "@canonical/biome-config": "^0.10.0-experimental.4",
     "@types/node": "^25.0.3",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "@vitest/coverage-istanbul": "^4.0.18",
     "@vitest/ui": "^4.0.18",
+    "express": "^5.1.0",
     "typescript": "5.9.3",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
